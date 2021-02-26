@@ -12,4 +12,6 @@ public interface EventRepository extends CrudRepository<Event, Long>{
 	
 	public <S> S save(Event e);
 	*/
+	
+	public Iterable<Event> findAllByOrderByDateAscTimeAsc();
 }

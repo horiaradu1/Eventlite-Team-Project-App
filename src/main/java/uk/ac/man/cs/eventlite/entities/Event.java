@@ -5,6 +5,8 @@ import java.time.LocalTime;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,8 +27,12 @@ public class Event {
 	private LocalTime time;
 
 	private String name;
-
-	private long venue;
+	
+	private long venueId;
+	
+	@ManyToOne
+	@JoinColumn(name="venueId", insertable=false, updatable=false)
+	public Venue venue;
 
 	public Event() {
 	}
@@ -63,11 +69,19 @@ public class Event {
 		this.name = name;
 	}
 
-	public long getVenue() {
-		return venue;
+	public Venue getVenue() {
+		return this.venue;
 	}
 
-	public void setVenue(long venue) {
-		this.venue = venue;
+	public void setVenue(Venue i) {
+		this.venue = i;
+	}
+	
+	public void setVenueId(long i) {
+		this.venueId = i;
+	}
+	
+	public long getVenueId() {
+		return this.venueId;
 	}
 }

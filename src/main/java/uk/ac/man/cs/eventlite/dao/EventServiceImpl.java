@@ -55,7 +55,7 @@ public class EventServiceImpl implements EventService {
 		}
 
 		return events;*/
-		return eventRepository.findAll();
+		return eventRepository.findAllByOrderByDateAscTimeAsc();
 	}
 	
 	@Override 

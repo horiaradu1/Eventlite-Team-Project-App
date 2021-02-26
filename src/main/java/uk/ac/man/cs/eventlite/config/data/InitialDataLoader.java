@@ -52,7 +52,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		Event ev = new Event();
 		ev.setDate(LocalDate.now());
 		ev.setTime(LocalTime.now());
-		ev.setVenue(1);
+		ev.setVenueId(1);
 
 		ev.setId(47);
 		ev.setName("ONG 2018");
