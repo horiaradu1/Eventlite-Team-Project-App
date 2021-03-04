@@ -30,6 +30,8 @@ public class Event {
 	
 	private long venueId;
 	
+	private String description;
+	
 	@ManyToOne
 	@JoinColumn(name="venueId", insertable=false, updatable=false)
 	public Venue venue;
