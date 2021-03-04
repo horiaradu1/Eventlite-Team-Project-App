@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
@@ -75,5 +77,26 @@ public class EventsControllerTest {
 
 		verify(eventService).findAll();
 		//verify(venueService).findAll();
+	}
+	
+	@Test
+	public void getEventValid() throws Exception {
+		when(this.venue.getName()).thenReturn("Kilburn");
+		when(this.event.getName()).thenReturn("GameJame");
+		when(this.event.getDate()).thenReturn(LocalDate.now());
+		when(this.event.getTime()).thenReturn(LocalTime.now());
+		when(this.event.getVenue()).thenReturn(venue);
+		when(this.event.getDescription()).thenReturn("Nothing");
+		when(this.eventService.findOne(0)).thenReturn(event);
+
+		mvc.perform(get("/events/0").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+			.andExpect(view().name("events/show")).andExpect(handler().methodName("event"));
+	}
+	
+	@Test
+	public void getEventInvalid() throws Exception {
+		when(this.eventService.findOne(0)).thenReturn(null);
+		mvc.perform(get("/events/0").accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
+			.andExpect(view().name("redirect:/events")).andExpect(handler().methodName("event"));
 	}
 }
