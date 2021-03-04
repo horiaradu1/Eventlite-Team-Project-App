@@ -34,11 +34,11 @@ public class EventsController {
 	
 	@GetMapping("/{id}")
 	public String event(@PathVariable("id") long id, Model model) {
-		System.out.println(id);
 		Event event = eventService.findOne(id);
-		if (event == null) return "redirect:/events";
+		if (event == null) return "redirect:/events"; // If event does not exist go to homepage
 		model.addAttribute("name", event.getName());
 		model.addAttribute("date", event.getDate());
+		model.addAttribute("time", event.getTime());
 		model.addAttribute("venue", event.getVenue().getName());
 		model.addAttribute("description", event.getDescription());
 		return "events/show";
