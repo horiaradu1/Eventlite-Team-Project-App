@@ -24,6 +24,11 @@
           <td th:text="${e.venue.name}">Event venue</td>
           <td th:text="${{e.date}}">Event date</td>
           <td th:text="${{e.time}}">Event time</td>
+          <td>
+          	<form th:action="@{/events/{num}(num=${e.id})}">
+      		  <button type="submit"><i class="fas fa-eye" aria-hidden="true"></i> View</button>
+    	  	</form>
+    	  </td>
         </tr>
       </tbody>
     </table>

@@ -56,14 +56,17 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
 		ev.setId(47);
 		ev.setName("ONG 2018");
+		ev.setDescription("OGN Something");
 		eventService.save(ev);
 
 		ev.setId(48);
 		ev.setName("Code Jam");
+		ev.setDescription("Fun codejam");
 		eventService.save(ev);
 
 		ev.setId(49);
 		ev.setName("ONI 2019");
+		ev.setDescription("ONI Something IDK");
 		eventService.save(ev);
 	}
 }
