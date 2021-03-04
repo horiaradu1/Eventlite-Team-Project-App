@@ -86,4 +86,12 @@ public class Event {
 	public long getVenueId() {
 		return this.venueId;
 	}
+	
+	public String getDescription() {
+		return this.description;
+	}
+	
+	public void setDescription(String desc) {
+		this.description = desc;
+	}
 }

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,5 +62,10 @@ public class EventServiceImpl implements EventService {
 	@Override 
 	public void save(Event e){
 		eventRepository.save(e);
+	}
+	
+	@Override
+	public Event findOne(long id) {
+		return eventRepository.findById(id).orElse(null);
 	}
 }
