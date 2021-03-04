@@ -91,6 +91,8 @@ public class EventsControllerTest {
 
 		mvc.perform(get("/events/0").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 			.andExpect(view().name("events/show")).andExpect(handler().methodName("event"));
+		
+		verify(eventService).findOne(0);
 	}
 	
 	@Test
@@ -98,5 +100,7 @@ public class EventsControllerTest {
 		when(this.eventService.findOne(0)).thenReturn(null);
 		mvc.perform(get("/events/0").accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
 			.andExpect(view().name("redirect:/events")).andExpect(handler().methodName("event"));
+		
+		verify(eventService).findOne(0);
 	}
 }

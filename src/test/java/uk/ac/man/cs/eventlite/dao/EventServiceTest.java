@@ -1,6 +1,12 @@
 package uk.ac.man.cs.eventlite.dao;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,12 +16,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import uk.ac.man.cs.eventlite.EventLite;
+import uk.ac.man.cs.eventlite.entities.Event;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = EventLite.class)
 @DirtiesContext
 @ActiveProfiles("test")
-@Disabled
 public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	@Autowired
@@ -23,4 +29,21 @@ public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 
 	// This class is here as a starter for testing any custom methods within the
 	// EventService. Note: It is currently @Disabled!
+	@Test
+	public void findOneTestFound() {
+		Event ev = new Event();
+		ev.setDate(LocalDate.now());
+		ev.setTime(LocalTime.now());
+		ev.setVenueId(1);
+
+		ev.setId(0);
+		ev.setName("ONG 2018");
+		eventService.save(ev);
+		assertSame(ev, eventService.findOne(0));
+	}
+	
+	@Test
+	public void findOneTestNotFound() {
+		assertSame(null, eventService.findOne(-1));
+	}
 }
