@@ -29,33 +29,11 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public long count() {
-		long count = 0;
-		/*Iterator<Event> i = eventRepository.findAll().iterator();
-
-		for (; i.hasNext(); count++) {
-			i.next();
-		}
-*/
 		return eventRepository.count();
 	}
 
 	@Override
 	public Iterable<Event> findAll() {
-		/*ArrayList<Event> events = new ArrayList<Event>();
-
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-
-			InputStream in = new ClassPathResource(DATA).getInputStream();
-
-			events = mapper.readValue(in, mapper.getTypeFactory().constructCollectionType(List.class, Event.class));
-		} catch (Exception e) {
-			log.error("Exception while reading file '" + DATA + "': " + e);
-			// If we can't read the file, then the event list is empty...
-		}
-
-		return events;*/
 		return eventRepository.findAllByOrderByDateAscTimeAsc();
 	}
 	
@@ -67,5 +45,17 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Event findOne(long id) {
 		return eventRepository.findById(id).orElse(null);
+	}
+	
+	@Override
+	public boolean existsById(long id) { 
+		return eventRepository.existsById(id);	
+	}
+	
+	@Override
+	public void deleteById(long id) { 
+		if(eventRepository.existsById(id)) {
+			eventRepository.deleteById(id);
+		}	
 	}
 }
