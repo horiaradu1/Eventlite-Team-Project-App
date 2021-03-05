@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/default}">
+<head>
+  <title>Event title</title>
+</head>
+<body>
+  <div layout:fragment="content">
+  
+  	<form th:action="@{/events}">
+  	<div>
+  		<label for="name">Event name:</label>
+        <input class="form-control" type="text" name="name" id="name"/ required>
+        
+        <label for="date">Event date:</label>
+        <input class="form-control" type="date" name="date" id="date"/ required>
+        
+        <label for="time">Event time:</label>
+        <input class="form-control" type="time" name="time" id="time"/ required>
+        
+        <label for="venue">Choose a vanue:</label>
+		<select id="vanues" name="Vanues" required>
+			  <option value="example_venue"> example_venue </option>
+		</select> 
+        
+        <br>
+        <label for="description">Event description:</label>
+        <input class="form-control" type="text" name="description" id="description"/ required>
+  	</div>
+  	<br>
+  	<div>
+  		<button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Submit</button>
+    	<br>
+    	<a class="btn btn-warning" role="button" href="/events"><i class="fas fa-ban" aria-hidden="true"></i> Cancel</a>
+	</div>
+	</form>
+	
+  </div>
+</body>
+</html>

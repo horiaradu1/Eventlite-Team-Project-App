@@ -43,4 +43,20 @@ public class EventsController {
 		model.addAttribute("description", event.getDescription());
 		return "events/show";
 	}
+	
+	@GetMapping("/add")
+	public String event_add_page(Model model) {
+		return "events/add";
+	}
+	
+	
+//	@GetMapping("/add")
+//	public String event_add(Model model) {
+//		
+//		ev.setId(47);
+//		ev.setName("ONG 2018");
+//		ev.setDescription("OGN Something");
+//		eventService.save(ev);
+//		return "events";
+//	}
 }
