@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Table(name = "events")
 public class Event {
 	@Id
+	@GeneratedValue
 	private long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
