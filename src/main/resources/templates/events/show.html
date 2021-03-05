@@ -14,6 +14,33 @@
       <p th:text="'Why: ' + ${description}">Event description</p>
     </blockquote>
     </form>
+    <br><br>
+    <div sec:authorize="isAuthenticated()">
+    	<h2>Edit event information</h2>
+	    <form action="#" th:action="@{/events}" th:object="${event}" method="post">
+	       <input class="form-control" type="hidden" name="newid" id="newid" th:value="${id}"/><br>
+	    	
+		   <label for="newname">New name:</label>
+		   <input class="form-control" type="text" name="newname" id="newname" th:value="${name}"/><br>
+		   
+		   <label for="newdate">New date:</label>
+		   <input class="form-control" type="date" name="newdate" id="newdate" th:value="${date}"/><br>
+		   
+		   <label for="newtime">New time:</label>
+		   <input class="form-control" type="time" name="newtime" id="newtime" th:value="${time}"/><br>
+		   
+		   <label for="newvenue">New venue:</label>
+		   <select class="form-control" name="newvenue" id="newvenue">
+		   	  <option th:each="v :${venues}" th:value="${v.id}" th:text="${v.name}" th:selected="${v.name==venue}"></option>
+		   </select>
+		   	
+		   
+		   <label for="newdesc">New description:</label>
+		   <textarea class="form-control" rows="3" name="newdesc" id="newdesc"/ th:value="${description}"></textarea><br>
+		   
+		   <button class="btn btn-primary" type="submit">Update Event</button>
+		</form>
+	</div>
   </div>
 </body>
 </html>
