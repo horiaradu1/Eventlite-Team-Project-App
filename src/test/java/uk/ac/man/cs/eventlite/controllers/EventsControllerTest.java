@@ -113,4 +113,19 @@ public class EventsControllerTest {
 		verify(eventService).deleteById(0);
 	}
 
+	@Test
+	public void searchEvent() throws Exception{
+		when(this.venue.getName()).thenReturn("Kilburn");
+		when(this.event.getName()).thenReturn("ONG 2018");
+		when(this.event.getDate()).thenReturn(LocalDate.now());
+		when(this.event.getTime()).thenReturn(LocalTime.now());
+		when(this.event.getVenue()).thenReturn(venue);
+		when(this.event.getDescription()).thenReturn("Nothing");
+		when(this.eventService.findByName("ONG")).thenReturn(Collections.<Event>singletonList(event));
+		
+		mvc.perform(get("/events/search?searchName=ONG").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+			.andExpect(view().name("events/index")).andExpect(handler().methodName("getEventsByName"));
+		
+		verify(eventService).findByName("ONG");
+	}
 }

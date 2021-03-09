@@ -15,4 +15,6 @@ public interface EventService {
 	public boolean existsById(long id);
 	
 	public void deleteById(long id);
+
+	public Iterable<Event> findByName(String name);
 }
