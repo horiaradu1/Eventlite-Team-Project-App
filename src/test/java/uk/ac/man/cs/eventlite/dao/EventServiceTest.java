@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.assertj.core.internal.Iterables;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,4 +47,40 @@ public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 	public void findOneTestNotFound() {
 		assertSame(null, eventService.findOne(-1));
 	}
+	
+	@Test
+	public void findByNameTest() {
+		Event ev = new Event();
+		ev.setDate(LocalDate.now());
+		ev.setTime(LocalTime.now());
+		ev.setVenueId(1);
+		ev.setId(0);
+		ev.setName("Event 1");
+		eventService.save(ev);
+		
+		Event ev2 = new Event();
+		ev2.setDate(LocalDate.now());
+		ev2.setTime(LocalTime.now());
+		ev2.setVenueId(1);
+		ev2.setId(1);
+		ev2.setName("Event 2");
+		eventService.save(ev2);
+		
+		int counter = 0;
+		for (Event e : eventService.findByName("nt"))
+			counter++;
+		assertSame(2, counter);
+		
+		counter = 0;
+		for (Event e : eventService.findByName("ab"))
+			counter++;
+		assertSame(0, counter);
+		
+		counter = 0;
+		for (Event e : eventService.findByName("Event 1"))
+			counter++;
+		assertSame(1, counter);
+	}
+	
+	
 }
