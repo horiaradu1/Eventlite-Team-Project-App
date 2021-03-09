@@ -1,6 +1,8 @@
 package uk.ac.man.cs.eventlite.dao;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -45,5 +47,39 @@ public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 	@Test
 	public void findOneTestNotFound() {
 		assertSame(null, eventService.findOne(-1));
+	}
+	
+	@Test
+	public void existsByIdFalse() {
+		assertFalse(eventService.existsById(0));
+	}
+	
+	@Test
+	public void existsByIdTrue() {
+		Event ev = new Event();
+		ev.setDate(LocalDate.now());
+		ev.setTime(LocalTime.now());
+		ev.setVenueId(1);
+
+		ev.setId(0);
+		ev.setName("ONG 2018");
+		eventService.save(ev);
+		assertTrue(eventService.existsById(0));
+	}
+	
+	@Test
+	public void deleteByIdValid() {
+		Event ev = new Event();
+		ev.setDate(LocalDate.now());
+		ev.setTime(LocalTime.now());
+		ev.setVenueId(1);
+
+		ev.setId(5);
+		ev.setName("ONG 2018");
+		eventService.save(ev);
+		assertTrue(eventService.existsById(5));
+		
+		eventService.deleteById(5);
+		assertFalse(eventService.existsById(5));
 	}
 }

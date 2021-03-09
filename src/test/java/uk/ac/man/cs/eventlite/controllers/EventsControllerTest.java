@@ -3,6 +3,9 @@ package uk.ac.man.cs.eventlite.controllers;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,7 +61,6 @@ public class EventsControllerTest {
 				.andExpect(view().name("events/index")).andExpect(handler().methodName("getAllEvents"));
 
 		verify(eventService).findAll();
-		//verify(venueService).findAll();
 		verifyNoInteractions(event);
 		verifyNoInteractions(venue);
 	}
@@ -68,7 +70,6 @@ public class EventsControllerTest {
 		when(venue.getName()).thenReturn("Kilburn Building");
 		when(venueService.findAll()).thenReturn(Collections.<Venue>singletonList(venue));
 
-		//when(event.getVenue()).thenReturn(1L);
 		when(event.getVenue()).thenReturn(venue);
 		when(eventService.findAll()).thenReturn(Collections.<Event>singletonList(event));
 
@@ -76,7 +77,6 @@ public class EventsControllerTest {
 				.andExpect(view().name("events/index")).andExpect(handler().methodName("getAllEvents"));
 
 		verify(eventService).findAll();
-		//verify(venueService).findAll();
 	}
 	
 	@Test
@@ -103,4 +103,14 @@ public class EventsControllerTest {
 		
 		verify(eventService).findOne(0);
 	}
+	
+	@Test
+	public void deleteEvent() throws Exception {
+		mvc.perform(delete("/events/0").with(csrf()).with(user("Rob").roles(Security.ADMIN_ROLE))
+			.accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
+			.andExpect(view().name("redirect:/events")).andExpect(handler().methodName("deleteEvent"));
+		
+		verify(eventService).deleteById(0);
+	}
+
 }

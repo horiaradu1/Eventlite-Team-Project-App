@@ -37,6 +37,7 @@ public class EventsController {
 	public String event(@PathVariable("id") long id, Model model) {
 		Event event = eventService.findOne(id);
 		if (event == null) return "redirect:/events"; // If event does not exist go to homepage
+		model.addAttribute("id", event.getId());
 		model.addAttribute("name", event.getName());
 		model.addAttribute("date", event.getDate());
 		model.addAttribute("time", event.getTime());
@@ -47,9 +48,7 @@ public class EventsController {
 	
 	@DeleteMapping("/{id}")
 	public String deleteEvent(@PathVariable("id") long id, Model model) {
-		if(eventService.existsById(id)) {
-			eventService.deleteById(id);
-		}
+		eventService.deleteById(id);
 		return "redirect:/events";
 	}
 }

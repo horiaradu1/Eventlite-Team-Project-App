@@ -12,8 +12,12 @@
       <p th:text="'When: ' + ${date} + ' ' + ${time}">Event date</p>
       <p th:text="'Where: ' + ${venue}">Venue</p>
       <p th:text="'Why: ' + ${description}">Event description</p>
+      <form th:action="@{/events/{num}(num=${id})}" th:method="delete">
+	  	<button type="submit"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
+	  </form>
     </blockquote>
-    </form>
+    
   </div>
+ 
 </body>
 </html>

@@ -54,8 +54,6 @@ public class EventServiceImpl implements EventService {
 	
 	@Override
 	public void deleteById(long id) { 
-		if(eventRepository.existsById(id)) {
-			eventRepository.deleteById(id);
-		}	
+		eventRepository.deleteById(id);	
 	}
 }
