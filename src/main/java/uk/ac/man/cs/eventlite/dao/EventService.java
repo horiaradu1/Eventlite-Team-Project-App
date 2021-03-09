@@ -11,4 +11,6 @@ public interface EventService {
 	public void save(Event e);
 	
 	public Event findOne(long id);
+	
+	public Iterable<Event> findByName(String name);
 }
