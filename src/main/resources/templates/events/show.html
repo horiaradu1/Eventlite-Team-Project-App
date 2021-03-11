@@ -17,7 +17,7 @@
     <br><br>
     <div sec:authorize="isAuthenticated()">
     	<h2>Edit event information</h2>
-	    <form action="#" th:action="@{/events}" th:object="${event}" method="post">
+	    <form action="#" th:action="@{/events}" th:object="${event}" method="POST">
 	       <input class="form-control" type="hidden" name="newid" id="newid" th:value="${id}"/><br>
 	    	
 		   <label for="newname">New name:</label>
@@ -32,11 +32,12 @@
 		   <label for="newvenue">New venue:</label>
 		   <select class="form-control" name="newvenue" id="newvenue">
 		   	  <option th:each="v :${venues}" th:value="${v.id}" th:text="${v.name}" th:selected="${v.name==venue}"></option>
-		   </select>
+		   </select><br>
 		   	
 		   
 		   <label for="newdesc">New description:</label>
-		   <textarea class="form-control" rows="3" name="newdesc" id="newdesc"/ th:value="${description}"></textarea><br>
+		   <textarea class="form-control" rows="3" name="newdesc" id="newdesc">
+		   [[${description}]]</textarea><br>
 		   
 		   <button class="btn btn-primary" type="submit">Update Event</button>
 		</form>
