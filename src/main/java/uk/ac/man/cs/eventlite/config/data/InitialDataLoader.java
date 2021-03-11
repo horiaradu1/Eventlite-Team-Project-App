@@ -47,13 +47,24 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		ev.setDescription(descript);
 		eventService.save(ev);
 	}
+
+	private void addEvent(int eventId, int venueId, LocalDate mydate, String name) {
+		Event ev = new Event();
+		ev.setId(eventId);
+		ev.setVenueId(venueId);
+		ev.setDate(mydate);
+		ev.setName(name);
+		eventService.save(ev);
+	}
 	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
+		/*
 		if (eventService.count() > 0) {
 			log.info("Database already populated. Skipping data initialization.");
 			return;
 		}
+		*/
 
 		// Build and save initial models here.
 
@@ -75,5 +86,6 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		addEvent(51, 1, date2, time1, "ONG 2018", "National Geography Olympiad");
 		addEvent(52, 2, date4, time2, "World Cup 2022", "Football Competition (Dubai)");
 		addEvent(53, 1, date4, time1, "ONM 2022", "Mathematical Olympiad (Medgidia)");
+		addEvent(54, 2, date3, "World Cup 2026");
 	}
 }
