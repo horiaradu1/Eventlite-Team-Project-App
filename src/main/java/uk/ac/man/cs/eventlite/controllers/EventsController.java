@@ -1,7 +1,7 @@
 package uk.ac.man.cs.eventlite.controllers;
 
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import javax.validation.Valid;
 
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import uk.ac.man.cs.eventlite.dao.EventService;
@@ -56,8 +55,33 @@ public class EventsController {
 	@PostMapping("/update")
 	public String updateEvent(@RequestBody @Valid @ModelAttribute Event event, RedirectAttributes redirectAttrs) {
 		// Validation
+		String name = event.getName();
 		String description = event.getDescription().trim();
 		event.setDescription(description);
+		if(!name.matches("[\\w*\\s*]*") || !description.matches("[\\w*\\s*]*")) {
+			// Can only contain chars or spaces
+			redirectAttrs.addFlashAttribute("bad_message", "Cannot use special characters!");
+			String redirect = "redirect:/events/" + event.getId();
+			return redirect;
+		}
+		// Name must be < 256 chars
+		if(name.length() >= 256) {
+			redirectAttrs.addFlashAttribute("bad_message", "Name must be less than 256 characters!");
+			String redirect = "redirect:/events/" + event.getId();
+			return redirect;
+		}
+		// Description must be < 500 chars
+		if(description.length() >= 500) {
+			redirectAttrs.addFlashAttribute("bad_message", "Description must be less than 500 characters!");
+			String redirect = "redirect:/events/" + event.getId();
+			return redirect;
+		}
+		if(!event.getDate().isAfter(LocalDate.now())) {
+			// Date must be in the future
+			redirectAttrs.addFlashAttribute("bad_message", "Date must be in the future!");
+			String redirect = "redirect:/events/" + event.getId();
+			return redirect;
+		}
 		// Saving the event
 		eventService.save(event);
 		redirectAttrs.addFlashAttribute("ok_message", "Event updated.");
