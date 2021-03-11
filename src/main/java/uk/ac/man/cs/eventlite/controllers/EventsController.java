@@ -45,7 +45,8 @@ public class EventsController {
 			model.addAttribute("previous", eventService.findPrevious());
 			return "events/index";
 		}
-		model.addAttribute("upcoming", eventService.findByName(name));
+		model.addAttribute("upcoming", eventService.findByNameAfter(name));
+		model.addAttribute("previous", eventService.findByNameBefore(name));
 		return "events/index";
 	}
 	

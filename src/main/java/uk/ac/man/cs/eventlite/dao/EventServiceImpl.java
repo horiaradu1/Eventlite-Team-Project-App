@@ -47,10 +47,20 @@ public class EventServiceImpl implements EventService {
 	public Iterable<Event> findPrevious() {
 		return eventRepository.findByDateBeforeOrderByDateDescNameAsc(LocalDate.now());
 	}
+	
+	@Override
+	public Iterable<Event> findByName(String name) {
+		return eventRepository.findByNameContainingIgnoreCaseOrderByDateAscNameAsc(name);
+	}
 
 	@Override
-	public Iterable<Event> findByName(String name){
-		return eventRepository.findByNameContainingIgnoreCaseOrderByDateAscTimeAscNameAsc(name);
+	public Iterable<Event> findByNameAfter(String name){
+		return eventRepository.findByNameContainingIgnoreCaseAndDateAfterOrderByDateAscNameAsc(name, LocalDate.now());
+	}
+
+	@Override
+	public Iterable<Event> findByNameBefore(String name){
+		return eventRepository.findByNameContainingIgnoreCaseAndDateBeforeOrderByDateDescNameAsc(name, LocalDate.now());
 	}
 	
 	@Override 
