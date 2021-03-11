@@ -59,12 +59,10 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		/*
 		if (eventService.count() > 0) {
 			log.info("Database already populated. Skipping data initialization.");
 			return;
 		}
-		*/
 
 		// Build and save initial models here.
 
