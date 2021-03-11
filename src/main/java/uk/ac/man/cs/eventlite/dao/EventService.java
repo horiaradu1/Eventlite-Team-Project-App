@@ -27,4 +27,6 @@ public interface EventService {
 	public Iterable<Event> findByNameAfter(String name);
 	
 	public Iterable<Event> findByNameBefore(String name);
+
+	public void deleteAll();
 }

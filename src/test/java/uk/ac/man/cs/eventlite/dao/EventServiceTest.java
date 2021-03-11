@@ -84,7 +84,10 @@ public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 		assertFalse(eventService.existsById(5));
 	}
 
+	@Test
 	public void findByNameTest() {
+		eventService.deleteAll();
+		
 		Event ev = new Event();
 		ev.setDate(LocalDate.now());
 		ev.setTime(LocalTime.now());
@@ -116,5 +119,50 @@ public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 			counter++;
 		assertSame(1, counter);
 	}
+
+	@Test
+	public void checkPreviousEvents() {
+		eventService.deleteAll();
+
+		Event ev = new Event();
+		ev.setDate(LocalDate.of(1998, 1, 5));
+		ev.setTime(LocalTime.now());
+		ev.setName("Event Test");
+		ev.setVenueId(1);
+		ev.setId(100);
+		eventService.save(ev);
+		
+		int counter;
+
+		counter = 0;
+		for (Event e : eventService.findPrevious()) counter++;
+		assertSame(1, counter);
+
+		counter = 0;
+		for (Event e : eventService.findUpcoming()) counter++;
+		assertSame(0, counter);
+	}
 	
+	@Test
+	public void checkUpcomingEvents() {
+		eventService.deleteAll();
+
+		Event ev = new Event();
+		ev.setDate(LocalDate.of(2026, 5, 6));
+		ev.setTime(LocalTime.now());
+		ev.setName("Event Test");
+		ev.setVenueId(1);
+		ev.setId(101);
+		eventService.save(ev);
+		
+		int counter;
+
+		counter = 0;
+		for (Event e : eventService.findPrevious()) counter++;
+		assertSame(0, counter);
+
+		counter = 0;
+		for (Event e : eventService.findUpcoming()) counter++;
+		assertSame(1, counter);
+	}
 }
