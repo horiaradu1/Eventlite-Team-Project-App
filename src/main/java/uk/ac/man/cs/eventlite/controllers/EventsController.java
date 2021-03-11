@@ -1,5 +1,7 @@
 package uk.ac.man.cs.eventlite.controllers;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -29,18 +31,21 @@ public class EventsController {
 	@GetMapping
 	public String getAllEvents(Model model) {
 
+		model.addAttribute("upcoming", eventService.findUpcoming());
+		model.addAttribute("previous", eventService.findPrevious());
 		model.addAttribute("events", eventService.findAll());
-
+		
 		return "events/index";
 	}
 	
 	@GetMapping("/search")
 	public String getEventsByName(@ModelAttribute("searchName") String name, Model model) {
 		if(name.equals("")) {
-			model.addAttribute("events", eventService.findAll());
+			model.addAttribute("upcoming", eventService.findUpcoming());
+			model.addAttribute("previous", eventService.findPrevious());
 			return "events/index";
 		}
-		model.addAttribute("events", eventService.findByName(name));
+		model.addAttribute("upcoming", eventService.findByName(name));
 		return "events/index";
 	}
 	

@@ -1,6 +1,7 @@
 package uk.ac.man.cs.eventlite.dao;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,9 +35,19 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public Iterable<Event> findAll() {
-		return eventRepository.findAllByOrderByDateAscTimeAsc();
+		return eventRepository.findAllByOrderByDateAscNameAsc();
 	}
 	
+	@Override
+	public Iterable<Event> findUpcoming() {
+		return eventRepository.findByDateAfterOrderByDateAscNameAsc(LocalDate.now());
+	}
+
+	@Override
+	public Iterable<Event> findPrevious() {
+		return eventRepository.findByDateBeforeOrderByDateDescNameAsc(LocalDate.now());
+	}
+
 	@Override
 	public Iterable<Event> findByName(String name){
 		return eventRepository.findByNameContainingIgnoreCaseOrderByDateAscTimeAscNameAsc(name);

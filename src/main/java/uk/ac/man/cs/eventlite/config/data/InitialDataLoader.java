@@ -29,6 +29,25 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 	@Autowired
 	private VenueService venueService;
 
+	private void addVenue(int venueId, String name, int capacity) {
+		Venue ven = new Venue();
+		ven.setName(name);
+		ven.setCapacity(capacity);
+		ven.setId(venueId);
+		venueService.save(ven);	
+	}
+
+	private void addEvent(int eventId, int venueId, LocalDate mydate, LocalTime mytime, String name, String descript) {
+		Event ev = new Event();
+		ev.setId(eventId);
+		ev.setVenueId(venueId);
+		ev.setDate(mydate);
+		ev.setTime(mytime);
+		ev.setName(name);
+		ev.setDescription(descript);
+		eventService.save(ev);
+	}
+	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if (eventService.count() > 0) {
@@ -37,36 +56,24 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		}
 
 		// Build and save initial models here.
-		Venue venue = new Venue();
-		venue.setName("Kilburn, G23");
-		venue.setCapacity(80);
-		venue.setId(1);
-		venueService.save(venue);
-		
-		Venue online = new Venue();
-		online.setName("Online");
-		online.setCapacity(100000);
-		online.setId(2);
-		venueService.save(online);
-		
-		Event ev = new Event();
-		ev.setDate(LocalDate.now());
-		ev.setTime(LocalTime.now());
-		ev.setVenueId(1);
 
-		ev.setId(47);
-		ev.setName("ONG 2018");
-		ev.setDescription("OGN Something");
-		eventService.save(ev);
+		LocalDate date1 = LocalDate.of(2017, 1, 13);  
+		LocalDate date2 = LocalDate.of(2018, 5, 10);
+		LocalDate date3 = LocalDate.of(2019, 4, 26);
+		LocalDate date4 = LocalDate.of(2022, 2, 14);
+		LocalTime time1 = LocalTime.of(9, 0);
+		LocalTime time2 = LocalTime.of(11, 0);
+		LocalTime time3 = LocalTime.of(16, 30);
 
-		ev.setId(48);
-		ev.setName("Code Jam");
-		ev.setDescription("Fun codejam");
-		eventService.save(ev);
+		addVenue(1, "Kilburn, G23", 80);
+		addVenue(2, "Online", 100000);
 
-		ev.setId(49);
-		ev.setName("ONI 2019");
-		ev.setDescription("ONI Something IDK");
-		eventService.save(ev);
+		addEvent(47, 1, date3, time3, "ONI 2019", "Olympiad in Informatics (Suceava)");
+		addEvent(48, 1, date1, time2, "ONI 2017", "Olympiad in Informatics (Brasov)");
+		addEvent(49, 2, date4, time3, "Code Jam 2022", "Contest organized by Google");
+		addEvent(50, 1, date2, time2, "ONM 2018", "Mathematical Olympiad (Timisoara)");
+		addEvent(51, 1, date2, time1, "ONG 2018", "National Geography Olympiad");
+		addEvent(52, 2, date4, time2, "World Cup 2022", "Football Competition (Dubai)");
+		addEvent(53, 1, date4, time1, "ONM 2022", "Mathematical Olympiad (Medgidia)");
 	}
 }
