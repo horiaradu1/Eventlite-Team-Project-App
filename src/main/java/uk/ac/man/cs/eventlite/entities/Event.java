@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Table(name = "events")
 public class Event {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -95,5 +96,27 @@ public class Event {
 	
 	public void setDescription(String desc) {
 		this.description = desc;
+	}
+	
+	public static String validation(Event e) {
+		if (e.name == null || e.name.length() == 0) {
+			return "Event name is not valid";
+		}
+		if (e.name.length() >= 256) {
+			return "Event name is too long";
+		}
+		if (e.date == null) {
+			return "Event date is not valid";
+		}
+		if (!e.date.isAfter(LocalDate.now())) {
+			return "Event date must be in the future";
+		}
+		if (e.venue == null) {
+			return "Event venue is not valid";
+		}
+		if (e.description.length() >= 500) {
+			return "Event description is too long";
+		}
+		return "";
 	}
 }
