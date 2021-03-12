@@ -8,14 +8,14 @@
   <div layout:fragment="content">
     <h1 th:text="${name}">Event!</h1>
 
-    <blockquote>
-      <p th:text="'When: ' + ${date} + ' ' + ${time}">Event date</p>
-      <p th:text="'Where: ' + ${venue}">Venue</p>
-      <p th:text="'Why: ' + ${description}">Event description</p>
+      <div th:utext="${date}">Event date</div>
+      <div th:if="${time}" th:text="${time}">Event time</div>
+      <div th:text="${venue}">Venue</div>
+      <div th:if="${description}" th:text="${description}">Event description</div>
+      <sup> HTelelo </sup>
       <form th:action="@{/events/{num}(num=${id})}" th:method="delete">
 	  	<button type="submit"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
 	  </form>
-    </blockquote>
     
   </div>
  

@@ -32,7 +32,7 @@
         <tr th:each="e : ${upcoming}">
           <td th:text="${e.name}">My Event</td>
           <td th:text="${e.venue.name}">Event venue</td>
-          <td th:text="${{e.date}}">Event date</td>
+          <td th:utext="${{e.getDateString()}}">Event date</td>
           <td th:text="${{e.time}}">Event time</td>
           <td>
           	<form th:action="@{/events/{num}(num=${e.id})}">
@@ -57,7 +57,7 @@
         <tr th:each="e : ${previous}">
           <td th:text="${e.name}">My Event</td>
           <td th:text="${e.venue.name}">Event venue</td>
-          <td th:text="${{e.date}}">Event date</td>
+          <td th:utext="${{e.getDateString()}}">Event date</td>
           <td th:text="${{e.time}}">Event time</td>
           <td>
           	<form th:action="@{/events/{num}(num=${e.id})}">

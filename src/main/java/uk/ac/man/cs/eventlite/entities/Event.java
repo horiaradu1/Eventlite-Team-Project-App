@@ -50,6 +50,29 @@ public class Event {
 	public LocalDate getDate() {
 		return date;
 	}
+	
+	public String getDateString() { 
+		String month = date.getMonth().toString();
+		month = month.substring(0, 1) + month.substring(1).toLowerCase(); // Capitalise only first letter
+		String day = date.getDayOfMonth() + getDayNumberSuffix(date.getDayOfMonth()); // Add superscript
+		return day + " " + month + " " + date.getYear();
+	}
+
+	private String getDayNumberSuffix(int day) {
+        if (day >= 11 && day <= 13) {
+            return "<sup>th</sup>";
+        }
+        switch (day % 10) {
+            case 1:
+                return "<sup>st</sup>";
+            case 2:
+                return "<sup>nd</sup>";
+            case 3:
+                return "<sup>rd</sup>";
+            default:
+                return "<sup>th</sup>";
+        }
+    }
 
 	public void setDate(LocalDate date) {
 		this.date = date;

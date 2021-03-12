@@ -1,6 +1,7 @@
 package uk.ac.man.cs.eventlite.controllers;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -56,12 +57,18 @@ public class EventsController {
 		if (event == null) return "redirect:/events"; // If event does not exist go to homepage
 		model.addAttribute("id", event.getId());
 		model.addAttribute("name", event.getName());
-		model.addAttribute("date", event.getDate());
-		model.addAttribute("time", event.getTime());
+		model.addAttribute("date", event.getDateString());
+		LocalTime time = event.getTime();
+		if (time != null) {
+			model.addAttribute("time", time);
+		}
 		model.addAttribute("venue", event.getVenue().getName());
-		model.addAttribute("description", event.getDescription());
+		if (event.getDescription() != null) {
+			model.addAttribute("description", event.getDescription());
+		}
 		return "events/show";
 	}
+	
 	
 	@DeleteMapping("/{id}")
 	public String deleteEvent(@PathVariable("id") long id, Model model) {
