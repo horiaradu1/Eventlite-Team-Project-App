@@ -1,10 +1,18 @@
 package uk.ac.man.cs.eventlite.controllers;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -14,6 +22,7 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,6 +31,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.LinkedMultiValueMap;
 
 import uk.ac.man.cs.eventlite.config.Security;
 import uk.ac.man.cs.eventlite.dao.EventService;
@@ -102,5 +113,47 @@ public class EventsControllerTest {
 			.andExpect(view().name("redirect:/events")).andExpect(handler().methodName("event"));
 		
 		verify(eventService).findOne(0);
+	}
+	
+	@Test
+	public void updateEvent() throws Exception {
+		ArgumentCaptor<Event> arg = ArgumentCaptor.forClass(Event.class);
+		MultiValueMap<String, String> values = new LinkedMultiValueMap<String, String>();
+		values.add("id", "1");
+		values.add("name", "Test");
+		values.add("date", "2021-10-10");
+		values.add("time", "");
+		values.add("venueId", "1");
+		values.add("description", "");
+		
+		mvc.perform(post("/events/update").with(user("Rob").roles(Security.ADMIN_ROLE))
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED).params(values)
+				.accept(MediaType.TEXT_HTML).with(csrf())).andExpect(status().isFound())
+				.andExpect(view().name("redirect:/events/1")).andExpect(model().hasNoErrors())
+				.andExpect(handler().methodName("updateEvent")).andExpect(flash().attributeExists("ok_message"));
+
+		verify(eventService).save(arg.capture());
+		assertThat("Test", equalTo(arg.getValue().getName()));
+	}
+	
+	@Test
+	public void updateInvalidEvent() throws Exception {
+		MultiValueMap<String, String> values = new LinkedMultiValueMap<String, String>();
+		values.add("id", "1");
+		values.add("name", "AaaaaaaaaaaaaaaaaaaaaaaaAaaaaaaaaaaaaaaaaaaaaaaaaAaaaaaaaa"
+				+ "aaaaaaaaaaaaaaaaAaaaaaaaaaaaaaaaaaaaaaaaaAaAaaaaaaaaaaaaaaaaaaaaaaa"
+				+ "AaaaaaaaaaaaaaaaaaaaaaaaaAaaaaaaaaaaaaaaaaaaaaaaaaAaaaaaaaaaaaaaaaa"
+				+ "aaaaaaaaAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		values.add("date", "2021-10-10");
+		values.add("time", "");
+		values.add("venueId", "1");
+		values.add("description", "");
+		mvc.perform(post("/events/update").with(user("Rob").roles(Security.ADMIN_ROLE))
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED).params(values)
+				.accept(MediaType.TEXT_HTML).with(csrf())).andExpect(status().isFound())
+				.andExpect(view().name("redirect:/events/1"))
+				.andExpect(handler().methodName("updateEvent"));
+
+		verify(eventService, never()).save(event);
 	}
 }
