@@ -17,6 +17,36 @@
 	  	<button type="submit"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
 	  </form>
     
+    <br>
+    <a href="/events">Go Back</a><br><br>
+    <div sec:authorize="isAuthenticated()">
+    	<h2>Edit event information</h2>
+	    <form action="#" th:action="@{/events/update}" th:object="${event}" method="POST">
+	       <input class="form-control" type="hidden" name="id" id="id" th:value="${id}"/><br>
+	    	
+		   <label for="name">New name:</label>
+		   <input class="form-control" type="text" name="name" id="name" th:value="${name}" required/><br>
+		   
+		   <label for="date">New date:</label>
+		   <input class="form-control" type="date" name="date" id="date" th:value="${date2}" required/><br>
+		   
+		   <label for="time">New time:</label>
+		   <input class="form-control" type="time" name="time" id="time" th:value="${time}"/><br>
+		   
+		   <label for="venueId">New venue:</label>
+		   <select class="form-control" name="venueId" id="venueId" required>
+		   	  <option th:each="v :${venues}" th:value="${v.id}" th:text="${v.name}" th:selected="${v.name==venue}"></option>
+		   </select><br>
+		   	
+		   
+		   <label for="description">New description:</label>
+		   <textarea class="form-control" rows="3" name="description" id="description">
+		   [[${description}]]</textarea><br>
+		   
+		   <button class="btn btn-primary" type="submit">Update Event</button>
+		</form>
+		<br>
+	</div>
   </div>
  
 </body>
