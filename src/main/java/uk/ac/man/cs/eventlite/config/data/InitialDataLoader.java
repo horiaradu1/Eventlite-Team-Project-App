@@ -29,11 +29,13 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 	@Autowired
 	private VenueService venueService;
 
-	private void addVenue(int venueId, String name, int capacity) {
+	private void addVenue(int venueId, String name, String street, String postcode, int capacity) {
 		Venue ven = new Venue();
 		ven.setName(name);
 		ven.setCapacity(capacity);
 		ven.setId(venueId);
+		ven.setStreet(street);
+		ven.setPostcode(postcode);
 		venueService.save(ven);	
 	}
 
@@ -74,8 +76,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		LocalTime time2 = LocalTime.of(11, 0);
 		LocalTime time3 = LocalTime.of(16, 30);
 
-		addVenue(1, "Kilburn, G23", 80);
-		addVenue(2, "Online", 100000);
+		addVenue(1, "Kilburn, G23", "My street", "011264", 80);
+		addVenue(2, "Online", "My other street", "M14 4DU", 100000);
 
 		addEvent(47, 1, date3, time3, "ONI 2019", "Olympiad in Informatics (Suceava)");
 		addEvent(48, 1, date1, time2, "ONI 2017", "Olympiad in Informatics (Brasov)");

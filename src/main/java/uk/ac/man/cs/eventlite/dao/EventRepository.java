@@ -14,4 +14,5 @@ public interface EventRepository extends CrudRepository<Event, Long>{
 	public Iterable<Event> findByNameContainingIgnoreCaseOrderByDateAscNameAsc(String name);
 	public Iterable<Event> findByDateBeforeOrderByDateDescNameAsc(LocalDate today);
 	public Iterable<Event> findByDateAfterOrderByDateAscNameAsc(LocalDate today);
+	public Iterable<Event> findByVenueId(long venueId);
 }

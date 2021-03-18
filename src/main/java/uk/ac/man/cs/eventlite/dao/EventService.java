@@ -27,6 +27,8 @@ public interface EventService {
 	public Iterable<Event> findByNameAfter(String name);
 	
 	public Iterable<Event> findByNameBefore(String name);
+	
+	public Iterable<Event> findByVenueId(long venueId);
 
 	public void deleteAll();
 }

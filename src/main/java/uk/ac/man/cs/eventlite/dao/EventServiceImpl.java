@@ -87,4 +87,9 @@ public class EventServiceImpl implements EventService {
 	public void deleteAll() { 
 		eventRepository.deleteAll();	
 	}
+
+	@Override
+	public Iterable<Event> findByVenueId(long venueId) {
+		return eventRepository.findByVenueId(venueId);
+	}
 }
