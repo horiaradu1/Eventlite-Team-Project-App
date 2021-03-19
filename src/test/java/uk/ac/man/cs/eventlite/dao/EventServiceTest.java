@@ -34,12 +34,12 @@ public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 		Event ev = new Event();
 		ev.setDate(LocalDate.now());
 		ev.setTime(LocalTime.now());
-		ev.setVenueId(1);
+		//ev.setVenueId(1);
 
-		ev.setId(0);
+		//ev.setId(0);
 		ev.setName("ONG 2018");
 		eventService.save(ev);
-		assertSame(ev, eventService.findOne(0));
+		assertSame(ev, eventService.findOne(ev.getId()));
 	}
 	
 	@Test
