@@ -3,13 +3,19 @@ package uk.ac.man.cs.eventlite.controllers;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
@@ -102,5 +108,114 @@ public class EventsControllerTest {
 			.andExpect(view().name("redirect:/events")).andExpect(handler().methodName("event"));
 		
 		verify(eventService).findOne(0);
+	}
+	
+	@Test
+	public void addEventValidation() throws Exception {
+		
+		when(venueService.findOne(venue.getId())).thenReturn(venue);
+		String venueId = Long.toString(venue.getId());
+		
+		LocalDate today = LocalDate.now();
+		String futureDate = today.plusDays(7).toString();
+		String pastDate = today.minusDays(7).toString();
+		
+		String longString = ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+							"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		
+		// Get to event page
+		mvc.perform(get("/events/add")
+			.accept(MediaType.TEXT_HTML))
+			.andExpect(status().isOk())
+			.andExpect(view().name("events/add"));
+		
+		// Valid Event
+		mvc.perform(post("/events/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", "Event Name Test")
+			.param("date", futureDate)
+			.param("time", "12:12:12")
+			.param("venue", venueId)
+			.param("desc", "Event Description Test")
+			.with(csrf()))
+			.andExpect(status().isFound())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addEvent"))
+			.andExpect(view().name("redirect:/events"));
+		
+		// No Name Event
+		mvc.perform(post("/events/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", "")
+			.param("date", futureDate)
+			.param("time", "")
+			.param("venue", venueId)
+			.param("desc", "Event Description Test")
+			.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addEvent"))
+			.andExpect(view().name("events/add"));
+		
+		// Too long Name Event
+		mvc.perform(post("/events/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", "Event Name Test" + longString)
+			.param("date", futureDate)
+			.param("time", "12:12:12")
+			.param("venue", venueId)
+			.param("desc", "Event Description Test")
+			.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addEvent"))
+			.andExpect(view().name("events/add"));
+		
+		// No Date Event
+		mvc.perform(post("/events/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", "Event Name Test")
+			.param("date", "")
+			.param("time", "")
+			.param("venue", venueId)
+			.param("desc", "Event Description Test")
+			.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addEvent"))
+			.andExpect(view().name("events/add"));
+		
+		// Past Date Event
+		mvc.perform(post("/events/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", "Event Name Test")
+			.param("date", pastDate)
+			.param("time", "12:12:12")
+			.param("venue", venueId)
+			.param("desc", "Event Description Test")
+			.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addEvent"))
+			.andExpect(view().name("events/add"));
 	}
 }

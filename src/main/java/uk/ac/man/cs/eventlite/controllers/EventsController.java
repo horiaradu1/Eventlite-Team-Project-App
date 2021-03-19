@@ -94,15 +94,5 @@ public class EventsController {
 		eventService.save(event);
 		return "redirect:/events";
 	}
-	
-	
-//	@GetMapping("/add")
-//	public String event_add(Model model) {
-//		
-//		ev.setId(47);
-//		ev.setName("ONG 2018");
-//		ev.setDescription("OGN Something");
-//		eventService.save(ev);
-//		return "events";
-//	}
+
 }
