@@ -39,10 +39,11 @@ public class VenueServiceImpl implements VenueService {
 	public void save(Venue venue) {
 		venueRepository.save(venue);
 	}
-
+	
 	@Override
 	public Venue findOne(long id) {
 		return venueRepository.findById(id).orElse(null);
 	}
+
 
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/default}">
+<head>
+  <title>Event title</title>
+</head>
+<body>
+  <div layout:fragment="content">
+  
+  	<form th:action="@{/events/add}" method="POST">
+  	<br>
+  	<strong><div class="alert alert-warning" th:if="${error}" th:classappend="${error}? has-error" th:text="${error}"></div></strong>
+  	<div sec:authorize="isAuthenticated()">
+  		<label for="name">Event name:</label>
+        <input class="form-control" type="text" name="name" id="name" th:value="${name}" required placeholder="Enter event name here">
+        
+        <label for="date">Event date:</label>
+        <input class="form-control" type="text" name="date" id="date" th:value="${date}" required placeholder="Enter event date here (year-month-day)">
+        
+        <label for="time">Event time: (not required)</label>
+        <input class="form-control" type="text" name="time" id="time" th:value="${time}" placeholder="Enter event time here (hour:minute)">
+        
+        <label for="venue">Choose a venue:</label>
+		<select class="form-control" id="venue" name="venue" required>
+			  <option th:each="v :${venues}" th:value="${v.id}" th:text="${v.name}" th:selected="${v.name==venue}"></option>
+		</select> 
+        
+        <label for="desc">Event description: (not required)</label>
+        <input class="form-control" type="text" name="desc" id="desc" th:value="${desc}" placeholder="Enter event description here">
+  	
+  	<br>
+  		<button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane" aria-hidden="true"></i> Submit</button>
+    	<br>
+    </div>
+    	<a class="btn btn-warning" role="button" href="/events"><i class="fas fa-ban" aria-hidden="true"></i> Cancel</a>
+	
+	</form>
+	
+  </div>
+</body>
+</html>

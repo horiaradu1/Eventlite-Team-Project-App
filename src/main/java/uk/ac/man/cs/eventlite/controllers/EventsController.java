@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.validation.Valid;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
@@ -116,4 +120,51 @@ public class EventsController {
 		String redirect = "redirect:/events/" + event.getId();
 		return redirect;
 	}
+
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String event_add_page(Model model) {
+		model.addAttribute("venues", venueService.findAll());
+		return "events/add";
+	}
+	
+	@PostMapping(value = "/add")
+	public String addEvent(	@RequestParam("name") String name, 
+						   	@RequestParam("date") String date,
+						   	@RequestParam("time") String time,
+						   	@RequestParam("venue") String venueID,
+						   	@RequestParam("desc") String desc,
+						   	Model model) throws Exception {
+		
+		Event event = new Event();
+		
+		event.setName(name);
+		
+		try {
+			event.setDate(LocalDate.parse(date));
+		}catch (Exception e) {
+			event.setDate(null);
+		}
+
+		try {
+			event.setTime(LocalTime.parse(time));
+		}catch (Exception e) {
+			event.setTime(null);
+		}
+		
+		event.setVenueId(Long.parseLong(venueID));
+		event.setVenue(venueService.findOne(Long.parseLong(venueID)));
+		
+		event.setDescription(desc);
+		
+		String eventValidation = Event.validation(event);
+		if (eventValidation.length() > 0) {
+			model.addAttribute("error", eventValidation);
+			model.addAttribute("venues", venueService.findAll());
+			return "events/add";
+		}
+		
+		eventService.save(event);
+		return "redirect:/events";
+	}
+
 }
