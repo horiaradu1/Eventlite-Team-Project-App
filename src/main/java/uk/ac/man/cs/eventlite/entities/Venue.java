@@ -1,5 +1,7 @@
 package uk.ac.man.cs.eventlite.entities;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -8,6 +10,7 @@ import javax.persistence.Table;
 public class Venue {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	private String name;
@@ -59,5 +62,27 @@ public class Venue {
 
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
+	}
+	
+	public static String validation(Venue v) {
+		if (v.name == null || v.name.length() == 0) {
+			return "Must enter a name";
+		}
+		if (v.name.length() >= 256) {
+			return "Venue name is too long";
+		}
+		if (v.street == null) {
+			return "Must enter a streetname";
+		}
+		if (v.street.length() >= 300) {
+			return "Streetname is too long";
+		}
+		if (v.postcode == null) {
+			return "Must enter a postcode";
+		}
+		if (v.capacity <= 0) {
+			return "Capacity must be an integer greater than 0";
+		}
+		return "";
 	}
 }

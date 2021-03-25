@@ -6,11 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
-import uk.ac.man.cs.eventlite.entities.Event;
 import uk.ac.man.cs.eventlite.entities.Venue;
 
 @Controller
@@ -39,6 +41,41 @@ public class VenuesController {
 		
 		model.addAttribute("upcoming", eventService.findByVenueId(id));
 		return "venues/show";
+	}
+
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String event_add_page(Model model) {
+		return "venues/add";
+	}
+	
+	@PostMapping(value = "/add")
+	public String addEvent(	@RequestParam("name") String name, 
+						   	@RequestParam("street") String street,
+						   	@RequestParam("postcode") String postcode,
+						   	@RequestParam("capacity") String capacity,
+						   	Model model) throws Exception {
+		
+		Venue venue = new Venue();
+		
+		venue.setName(name);
+		venue.setStreet(street);
+		venue.setPostcode(postcode);
+
+		try {
+			int cap = Integer.parseInt(capacity);
+			venue.setCapacity(cap);
+		}catch (Exception e) {
+			venue.setCapacity(-1);
+		}
+		
+		String venueValidation = Venue.validation(venue);
+		if (venueValidation.length() > 0) {
+			model.addAttribute("error", venueValidation);
+			return "venues/add";
+		}
+		
+		venueService.save(venue);
+		return "redirect:/venues";
 	}
 
 }
