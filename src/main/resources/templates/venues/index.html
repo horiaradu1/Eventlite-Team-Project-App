@@ -9,6 +9,9 @@
   <div layout:fragment="content">
     <h1>All venues</h1>
 
+  	<div sec:authorize="isAuthenticated()">
+    	<a class="btn btn-primary" role="button" href="/venues/add"><i class="fas fa-plus" aria-hidden="true"></i> Add venue </a>
+    </div>
   </div>
 </body>
 </html>

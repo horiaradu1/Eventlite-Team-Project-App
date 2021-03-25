@@ -80,7 +80,7 @@ public class Venue {
 		if (v.postcode == null) {
 			return "Must enter a postcode";
 		}
-		if (v.capacity >= 0) {
+		if (v.capacity <= 0) {
 			return "Capacity must be an integer greater than 0";
 		}
 		return "";
