@@ -18,15 +18,15 @@ import uk.ac.man.cs.eventlite.entities.Venue;
 @Controller
 @RequestMapping(value = "/venues", produces = { MediaType.TEXT_HTML_VALUE })
 public class VenuesController {
-	
+
 	@Autowired
 	private EventService eventService;
 	@Autowired
 	private VenueService venueService;
-	
+
 	@GetMapping
 	public String getAllEvents(Model model) {
-		
+		model.addAttribute("venues", venueService.findAll());
 		return "venues/index";
 	}
 	
