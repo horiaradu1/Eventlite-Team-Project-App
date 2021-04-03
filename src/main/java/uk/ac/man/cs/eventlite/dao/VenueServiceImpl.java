@@ -32,7 +32,7 @@ public class VenueServiceImpl implements VenueService {
 
 	@Override
 	public Iterable<Venue> findAll() {
-		return venueRepository.findAll();
+		return venueRepository.findAllByOrderByNameAsc();
 	}
 	
 	@Override
