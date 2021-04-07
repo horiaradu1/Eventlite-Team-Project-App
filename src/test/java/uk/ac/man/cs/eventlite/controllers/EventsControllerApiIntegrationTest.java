@@ -34,6 +34,8 @@ public class EventsControllerApiIntegrationTest extends AbstractTransactionalJUn
 		client = WebTestClient.bindToServer().baseUrl("http://localhost:" + port + "/api").build();
 	}
 
+	// !! This test does not work !!
+	// Error Message: "Status expected:<200 OK> but was:<500 INTERNAL_SERVER_ERROR>"
 	@Test
 	public void testGetAllEvents() {
 		client.get().uri("/events").accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectHeader()
