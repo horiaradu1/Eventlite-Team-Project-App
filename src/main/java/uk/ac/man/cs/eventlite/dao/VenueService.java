@@ -12,4 +12,9 @@ public interface VenueService {
 	public void save(Venue venue);
 
 	public Venue findOne(long id);
+	
+	public Iterable<Venue> findTopVenues(int n);
+	
+	public Iterable<Integer> findNumberEvents(int n);
+
 }

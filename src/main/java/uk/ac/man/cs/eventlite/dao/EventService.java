@@ -10,6 +10,8 @@ public interface EventService {
 
 	public Iterable<Event> findAll();
 	
+	public Iterable<Event> findUpcoming(int n);
+	
 	public Iterable<Event> findUpcoming();
 	
 	public Iterable<Event> findPrevious();
