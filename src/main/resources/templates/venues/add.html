@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/default}">
+<head>
+  <title>Event title</title>
+</head>
+<body>
+  <div layout:fragment="content">
+  
+  	<form th:action="@{/venues/add}" method="POST">
+  	<br>
+  	<strong><div class="alert alert-warning" th:if="${error}" th:classappend="${error}? has-error" th:text="${error}"></div></strong>
+  	<div sec:authorize="isAuthenticated()">
+  		<label for="name">Venue name:</label>
+        <input class="form-control" type="text" name="name" id="name" th:value="${name}" required placeholder="Enter venue name here">
+  		<label for="street">Street:</label>
+        <input class="form-control" type="text" name="street" id="street" th:value="${street}" required placeholder="Enter street name here">
+  		<label for="postcode">Postcode:</label>
+        <input class="form-control" type="text" name="postcode" id="postcode" th:value="${postcode}" required placeholder="Enter postcode here">
+  		<label for="capacity">Capacity:</label>
+        <input class="form-control" type="text" name="capacity" id="capacity" th:value="${capacity}" required placeholder="Enter capacity here">
+  	<br>
+  		<button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane" aria-hidden="true"></i> Submit</button>
+    	<br>
+    </div>
+    	<a class="btn btn-warning" role="button" href="/venues"><i class="fas fa-ban" aria-hidden="true"></i> Cancel</a>
+	
+	</form>
+	
+  </div>
+</body>
+</html>
