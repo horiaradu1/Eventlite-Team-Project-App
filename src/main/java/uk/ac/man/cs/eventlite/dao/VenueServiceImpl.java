@@ -61,5 +61,9 @@ public class VenueServiceImpl implements VenueService {
 		return venueRepository.countEvents(n);
 	}
 	
+	@Override
+	public Iterable<Venue> findByName(String name) {
+		return venueRepository.findByNameContainingIgnoreCaseOrderByNameAsc(name);
+	}
 	
 }

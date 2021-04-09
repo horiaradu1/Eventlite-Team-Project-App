@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,16 @@ public class VenuesController {
 	public String getAllVenues(Model model) {
 		
 		model.addAttribute("venues", venueService.findAll());
+		return "venues/index";
+	}
+	
+	@GetMapping("/search")
+	public String getEventsByName(@ModelAttribute("searchName") String name, Model model) {
+		if(name.equals("")) {
+			model.addAttribute("venues", venueService.findAll());
+			return "venues/index";
+		}
+		model.addAttribute("venues", venueService.findByName(name));
 		return "venues/index";
 	}
 	

@@ -18,6 +18,8 @@ public interface VenueRepository extends CrudRepository<Venue, Long> {
 	
 	@Query(value = "SELECT COUNT(events.venueid) FROM events, venues WHERE events.venueid = venues.id GROUP BY venues.id ORDER BY COUNT(events.id) DESC LIMIT :number", nativeQuery = true)
 	public List<Integer> countEvents(@Param("number") int number);
+	
+	public Iterable<Venue> findByNameContainingIgnoreCaseOrderByNameAsc(String name);
 	 
 	public Iterable<Venue> findAllByOrderByNameAsc();
 
