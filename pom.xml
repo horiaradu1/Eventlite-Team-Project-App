@@ -153,7 +153,7 @@
 		<artifactId>gson</artifactId>
 	</dependency>
 	<dependency>
-		<groupId>com.mapbox.mapboxsdk</groupId>s
+		<groupId>com.mapbox.mapboxsdk</groupId>
 		<artifactId>mapbox-sdk-services</artifactId>
 		<version>5.0.0</version>
 	</dependency>
