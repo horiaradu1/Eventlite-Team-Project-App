@@ -3,6 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <head>
+
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"></script>
+<style>
+	#map { position: relative; margin: auto; width: 100%; height: 50vh}
+</style>
   <title>All events</title>
 </head>
 <body>
@@ -19,9 +26,10 @@
 	    	<table>
 	    </form>
     </div>
-    
-    <p><a class="btn btn-primary" role="button" href="/events/add"><i class="fas fa-plus" aria-hidden="true"></i> Add Event</a></p>
-    
+    <div sec:authorize="isAuthenticated()">
+    	<p><a class="btn btn-primary" role="button" href="/events/add"><i class="fas fa-plus" aria-hidden="true"></i> Add Event</a></p>
+    </div>
+    <a class="btn btn-primary" role="button"  href="/"><i  aria-hidden="true"></i> Go back </a><br><br>
     <h2>Upcoming events:</h2>
 
     <table class="table table-striped table-hover">
@@ -72,7 +80,24 @@
         </tr>
       </tbody>
     </table>
+<br>
+<div id="map"></div>
+<br>
+	<script th:inline="javascript">
+	
+		mapboxgl.accessToken = 'pk.eyJ1IjoiaG9yaWFyYWR1IiwiYSI6ImNrbmV2NmI4MDF2NW0yd211aXdqM3lyOWcifQ.eH2LOcxZRqCa0LvHngEZHg';
+		var map = new mapboxgl.Map({
+			container: 'map', // container id
+			style: 'mapbox://styles/mapbox/streets-v11', // style URL
+			center: [0, 53], // starting position [lng, lat]
+			zoom: 5 // starting zoom
+		});
+	
+	</script>
 
+	
   </div>
+
+
 </body>
 </html>
