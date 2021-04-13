@@ -21,6 +21,10 @@ public class Venue {
 
 	private int capacity;
 
+	private double latitude;
+	
+	private double longitude;
+	
 	public Venue() {
 	}
 
@@ -62,6 +66,22 @@ public class Venue {
 
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
+	}
+	
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	
+	public double getLatitude() {
+		return latitude;
+	}
+	
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	
+	public double getLongitude() {
+		return longitude;
 	}
 	
 	public static String validation(Venue v) {
