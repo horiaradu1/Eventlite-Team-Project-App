@@ -12,7 +12,7 @@
       <div th:if="${time}" th:text="${time}">Event time</div>
       <div th:text="${venue}">Venue</div>
       <div th:if="${description}" th:text="${description}">Event description</div>
-      <sup> HTelelo </sup>
+
       <form th:action="@{/events/{num}(num=${id})}" th:method="delete">
 	  	<button type="submit"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
 	  </form>

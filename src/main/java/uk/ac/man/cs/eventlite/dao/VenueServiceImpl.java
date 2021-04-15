@@ -66,4 +66,8 @@ public class VenueServiceImpl implements VenueService {
 		return venueRepository.findByNameContainingIgnoreCaseOrderByNameAsc(name);
 	}
 	
+	@Override
+	public void deleteById(long id) { 
+		venueRepository.deleteById(id);	
+	}
 }

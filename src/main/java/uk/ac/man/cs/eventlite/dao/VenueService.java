@@ -19,4 +19,5 @@ public interface VenueService {
 	
 	public Iterable<Venue> findByName(String name);
 
+	public void deleteById(long id);
 }

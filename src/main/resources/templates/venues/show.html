@@ -12,7 +12,7 @@
     <div th:text="${postcode}">Venue postcode</div>
     <div th:text="'Capacity: ' + ${capacity}">Venue capacity</div>
     
-    <a class="btn btn-primary" role="button"  href="/"><i  aria-hidden="true"></i> Go back </a><br>
+    <a class="btn btn-primary" role="button"  href="/venues"><i  aria-hidden="true"></i> Go back </a><br>
     
     <h3>Events coming up...</h3>
     <table class="table table-striped table-hover">
@@ -38,7 +38,33 @@
         </tr>
       </tbody>
     </table>
-
+	
+	<strong><div class="alert alert-warning" th:if="${error}" th:classappend="${error}? has-error" th:text="${error}"></div></strong>
+    <div sec:authorize="isAuthenticated()">
+    	<h2>Edit venue information</h2>
+	    <form action="#" th:action="@{/venues/update}" th:object="${venue}" method="POST">
+	       <input class="form-control" type="hidden" name="id" id="id" th:value="${id}"/><br>
+	    	
+		   <label for="name">New name:</label>
+		   <input class="form-control" type="text" name="name" id="name" th:value="${name}" required/><br>
+		   
+		   <label for="name">New street:</label>
+		   <input class="form-control" type="text" name="street" id="street" th:value="${street}" required/><br>
+		   
+		   <label for="name">New postcode:</label>
+		   <input class="form-control" type="text" name="postcode" id="postcode" th:value="${postcode}" required/><br>
+		   
+		   <label for="name">New capacity:</label>
+		   <input class="form-control" type="text" name="capacity" id="capacity" th:value="${capacity}" required/><br>
+		   
+		   <button class="btn btn-primary" type="submit">Update venue</button>
+		</form>
+		<br>
+		
+		<form th:action="@{/venues/{num}(num=${id})}" th:method="delete">
+			<button type="submit"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
+		</form>
+	</div>
   </div>
 </body>
 </html>
