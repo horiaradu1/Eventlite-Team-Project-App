@@ -69,6 +69,7 @@ public class Venue {
 
 	public void setStreet(String street) {
 		this.street = street;
+		this.addressGeocode();
 	}
 	
 	public String getPostcode() {
@@ -77,6 +78,7 @@ public class Venue {
 
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
+		this.addressGeocode();
 	}
 	
 	public void setLatitude(double latitude) {
@@ -120,7 +122,7 @@ public class Venue {
 	// Call this method to set latitude and longitude from the address
 	public void addressGeocode() {
 		// Assure that postcode and street are set
-		if (!street.isEmpty() && !postcode.isEmpty()) {
+		if (street != null && postcode != null && !street.isEmpty() && !postcode.isEmpty()) {
 			MapboxGeocoding mapboxGeocoding = MapboxGeocoding.builder()
 				.accessToken("pk.eyJ1IjoiaG9yaWFyYWR1IiwiYSI6ImNrbmV2NmI4MDF2NW0yd211aXdqM3lyOWcifQ.eH2LOcxZRqCa0LvHngEZHg")
 				.query(postcode + " " + street) 

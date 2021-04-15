@@ -9,6 +9,24 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"></script>
 <style>
 	#map { position: relative; margin: auto; width: 100%; height: 50vh}
+
+	.marker {
+	  background-image: url('../../images/mapmarker.png');
+	  background-size: cover;
+	  width: 50px;
+	  height: 50px;
+	  border-radius: 50%;
+	  cursor: pointer;
+	}
+
+	.mapboxgl-popup {
+	  max-width: 200px;
+	}
+
+	.mapboxgl-popup-content {
+	  text-align: center;
+	  font-family: 'Open Sans', sans-serif;
+	}
 </style>
   <title>All events</title>
 </head>
@@ -93,6 +111,52 @@
 			zoom: 5 // starting zoom
 		});
 	
+		/*<![CDATA[*/
+		
+		var events = [[${events}]];
+		
+		events.forEach(function(marker) {
+			console.log(marker.venue.latitude)
+			console.log(marker.venue.longitude)
+			var el = document.createElement('div');
+  			el.className = 'marker';
+
+  			var long = marker.venue.longitude
+  			var lat = marker.venue.latitude
+  			
+  			if (typeof long === 'undefined') {
+  				return;
+  			}
+  			
+  			if (typeof lat === 'undefined') {
+  				return;
+  			}
+  			
+  			// Add offset to deal with stacked events
+  			long = long + Math.random() * (.00008)
+  			lat = lat + Math.random() * (.00008)
+
+  			var time = '';
+  			if (typeof marker.time !== 'undefined' && marker.time !== null) {
+				time = 'Starts at ' + marker.time.slice(0, -3)
+			}
+  			// make a marker for each feature and add to the map
+  			new mapboxgl.Marker(el)
+    			.setLngLat([long, lat])
+    			.setPopup(
+					new mapboxgl.Popup({ offset: 25 }) // add popups
+						.setHTML(
+							'<h3>' +
+								marker.name +
+							'</h3><p>' +
+								time +
+							'</p>'
+						)
+				)
+    			.addTo(map);
+		});
+		
+		/*]]>*/
 	</script>
 
 	
