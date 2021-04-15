@@ -18,7 +18,7 @@
 	  </form>
     
     <br>
-    <a href="/events">Go Back</a><br><br>
+    <a class="btn btn-primary" role="button"  href="/events"><i  aria-hidden="true"></i> Go back </a><br><br>
     <div sec:authorize="isAuthenticated()">
     	<h2>Edit event information</h2>
 	    <form action="#" th:action="@{/events/update}" th:object="${event}" method="POST">

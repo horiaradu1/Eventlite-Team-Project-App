@@ -5,6 +5,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.mapbox.api.geocoding.v5.MapboxGeocoding;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.geojson.Point;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 @Entity
 @Table(name = "venues")
 public class Venue {
@@ -21,6 +32,10 @@ public class Venue {
 
 	private int capacity;
 
+	private double latitude;
+	
+	private double longitude;
+	
 	public Venue() {
 	}
 
@@ -54,6 +69,7 @@ public class Venue {
 
 	public void setStreet(String street) {
 		this.street = street;
+		this.addressGeocode();
 	}
 	
 	public String getPostcode() {
@@ -62,6 +78,23 @@ public class Venue {
 
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
+		this.addressGeocode();
+	}
+	
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	
+	public double getLatitude() {
+		return latitude;
+	}
+	
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	
+	public double getLongitude() {
+		return longitude;
 	}
 	
 	public static String validation(Venue v) {
@@ -84,5 +117,45 @@ public class Venue {
 			return "Capacity must be an integer greater than 0";
 		}
 		return "";
+	}
+	
+	// Call this method to set latitude and longitude from the address
+	public void addressGeocode() {
+		// Assure that postcode and street are set
+		if (street != null && postcode != null && !street.isEmpty() && !postcode.isEmpty()) {
+			MapboxGeocoding mapboxGeocoding = MapboxGeocoding.builder()
+				.accessToken("pk.eyJ1IjoiaG9yaWFyYWR1IiwiYSI6ImNrbmV2NmI4MDF2NW0yd211aXdqM3lyOWcifQ.eH2LOcxZRqCa0LvHngEZHg")
+				.query(postcode + " " + street) 
+				.build();
+			
+			mapboxGeocoding.enqueueCall(new Callback<GeocodingResponse>() {
+				@Override
+				public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+			 
+					List<CarmenFeature> results = response.body().features();
+					if (results.size() > 0) {
+						// Set the latitude and longitude
+						Point firstResultPoint = results.get(0).center();
+						setCoordinates(firstResultPoint);
+					} 
+				}
+			 
+				@Override
+				public void onFailure(Call<GeocodingResponse> call, Throwable throwable) {
+					throwable.printStackTrace();
+				}
+			});
+			try {
+				Thread.sleep(1000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void setCoordinates(Point p) {
+		latitude = p.latitude();
+		longitude = p.longitude();
 	}
 }

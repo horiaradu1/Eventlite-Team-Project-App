@@ -76,8 +76,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		LocalTime time2 = LocalTime.of(11, 0);
 		LocalTime time3 = LocalTime.of(16, 30);
 
-		addVenue(1, "Kilburn, G23", "My street", "011264", 80);
-		addVenue(2, "Online", "My other street", "M14 4DU", 100000);
+		addVenue(1, "Kilburn, G23", "Oxford Rd", "M13 9PL", 80);
+		addVenue(2, "Online", "Deramore St", "M14 4DU", 100000);
 
 		addEvent(47, 1, date3, time3, "ONI 2019", "Olympiad in Informatics (Suceava)");
 		addEvent(48, 1, date1, time2, "ONI 2017", "Olympiad in Informatics (Brasov)");
