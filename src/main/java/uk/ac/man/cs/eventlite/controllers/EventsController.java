@@ -65,6 +65,7 @@ public class EventsController {
 		model.addAttribute("name", event.getName());
 		model.addAttribute("date", event.getDateString());
 		model.addAttribute("date2", event.getDate());
+		model.addAttribute("location", event.getVenue());
 		LocalTime time = event.getTime();
 		if (time != null) {
 			model.addAttribute("time", time);
