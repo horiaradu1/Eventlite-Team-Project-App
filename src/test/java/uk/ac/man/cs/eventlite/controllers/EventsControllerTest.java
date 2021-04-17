@@ -88,8 +88,22 @@ public class EventsControllerTest {
 	
 	@Test
 	public void getEventValid() throws Exception {
-		if (eventService.count() == 0) return;
+		Venue ven = new Venue();
+		ven.setName("Kilburn");
+		ven.setCapacity(100);
+		ven.setId(0);
+		ven.setStreet("street");
+		ven.setPostcode("postcode");
+		
+		Event ev = new Event();
+		ev.setId(0);
+		ev.setVenue(ven);
+		ev.setDate(LocalDate.now());
+		ev.setTime(LocalTime.now());
+		ev.setName("GameJame");
+		ev.setDescription("sss");
 
+		when(this.eventService.findOne(0)).thenReturn(ev);
 		mvc.perform(get("/events/0").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 			.andExpect(view().name("events/show")).andExpect(handler().methodName("event"));
 		
