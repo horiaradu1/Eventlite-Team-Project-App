@@ -5,6 +5,8 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -22,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +38,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
+
+import com.mapbox.api.geocoding.v5.MapboxGeocoding;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.geojson.Point;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import org.springframework.util.LinkedMultiValueMap;
 
 import uk.ac.man.cs.eventlite.config.Security;
@@ -85,6 +98,49 @@ public class EventsControllerTest {
 		verify(eventService).findPrevious();
 		verify(eventService).findUpcoming();
 	}
+	
+	@Test
+	public void checkCorrectLongLat() throws Exception {
+		Venue ven = new Venue();
+		ven.setName("Kilburn");
+		ven.setCapacity(100);
+		ven.setId(0);
+		ven.setStreet("Strada Balta Albina nr. 9, București");
+		ven.setPostcode("032622");
+		
+		double testLat = 44.40864436198193;
+		double testLong = 26.210873520635612;
+		
+		ven.addressGeocode();
+		
+
+		
+		assertTrue(Math.abs(testLong - ven.getLongitude()) < 0.001);
+		assertTrue(Math.abs(testLat - ven.getLatitude()) < 0.001);
+		
+	}
+	
+	@Test
+	public void checkMapBoxApi() throws Exception {
+		Venue ven = new Venue();
+		ven.setName("Kilburn");
+		ven.setCapacity(100);
+		ven.setId(0);
+		
+		//Empty address test
+		ven.setStreet("");
+		ven.setPostcode("");
+		ven.addressGeocode();
+		assertTrue( ven.getLatitude() == 0 && ven.getLongitude() == 0);
+		
+		
+		//Invalid address test
+		ven.setStreet("((((((");
+		ven.setPostcode("((((((");
+		ven.addressGeocode();
+		assertTrue( ven.getLatitude() == 0 && ven.getLongitude() == 0);
+	}
+
 	
 	@Test
 	public void getEventValid() throws Exception {
