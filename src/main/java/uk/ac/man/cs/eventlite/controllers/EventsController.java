@@ -175,7 +175,7 @@ public class EventsController {
 	}
 	
 	@PostMapping("/tweet")
-	public String tweetEvent(@RequestParam @Valid @ModelAttribute String tweet, RedirectAttributes redirectAttrs) {
+	public String tweetEvent(@RequestParam String id, @RequestParam String tweet, RedirectAttributes redirectAttrs) {
 		
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 	    cb.setDebugEnabled(true)
@@ -189,9 +189,11 @@ public class EventsController {
 	    try {
 			twitter.updateStatus(tweet);
 		} catch (TwitterException e) {
-			return null;
+			redirectAttrs.addFlashAttribute("bad_message", "Failed to post tweet.");
+			return "redirect:/events/"+id;
 		}
-		
-		return null;
+	    String message = "Your tweet: \"" + tweet + "\" was posted.";
+	    redirectAttrs.addFlashAttribute("ok_message", message);
+	    return "redirect:/events/"+id;
 	}
 }
