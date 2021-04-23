@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
+
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -167,5 +173,25 @@ public class EventsController {
 		eventService.save(event);
 		return "redirect:/events";
 	}
-
+	
+	@PostMapping("/tweet")
+	public String tweetEvent(@RequestParam @Valid @ModelAttribute String tweet, RedirectAttributes redirectAttrs) {
+		
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+	    cb.setDebugEnabled(true)
+	    .setOAuthConsumerKey("3GPfdMNYao6FSWlacVap2SOuU")
+	    .setOAuthConsumerSecret("76IfrYzbkqjuNc5tHsPYcNuyElMV7vwXJSh6zWytPEFp4UC31c")
+	    .setOAuthAccessToken("1381697881585950722-dYJk01rGhj8W296WaeInEM1lvrmcq2")
+	    .setOAuthAccessTokenSecret("3gtEKzDtVUPdtL1476zY8tn8rlUpZMVru2P3GxDYw3LEQ");
+	    TwitterFactory tf = new TwitterFactory(cb.build());
+	    Twitter twitter = tf.getInstance();
+	    	
+	    try {
+			twitter.updateStatus(tweet);
+		} catch (TwitterException e) {
+			return null;
+		}
+		
+		return null;
+	}
 }
