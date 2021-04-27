@@ -104,16 +104,19 @@ public class Venue {
 		if (v.name.length() >= 256) {
 			return "Venue name is too long";
 		}
-		if (v.street == null) {
+		if (v.street == null || v.street.length() == 0) {
 			return "Must enter a streetname";
 		}
 		if (v.street.length() >= 300) {
 			return "Streetname is too long";
 		}
-		if (v.postcode == null) {
+		if (v.postcode == null || v.postcode.length() == 0) {
 			return "Must enter a postcode";
 		}
-		if (v.capacity <= 0) {
+		if (v.postcode.length() >= 256) {
+			return "Venue name is too long";
+		}
+		if (v.capacity < 0) {
 			return "Capacity must be an integer greater than 0";
 		}
 		return "";
@@ -122,7 +125,7 @@ public class Venue {
 	// Call this method to set latitude and longitude from the address
 	public void addressGeocode() {
 		// Assure that postcode and street are set
-		if (street != null && postcode != null && !street.isEmpty() && !postcode.isEmpty()) {
+		if (Venue.validation(this).length() == 0) {
 			MapboxGeocoding mapboxGeocoding = MapboxGeocoding.builder()
 				.accessToken("pk.eyJ1IjoiaG9yaWFyYWR1IiwiYSI6ImNrbmV2NmI4MDF2NW0yd211aXdqM3lyOWcifQ.eH2LOcxZRqCa0LvHngEZHg")
 				.query(postcode + " " + street) 
@@ -131,7 +134,6 @@ public class Venue {
 			mapboxGeocoding.enqueueCall(new Callback<GeocodingResponse>() {
 				@Override
 				public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-			 
 					List<CarmenFeature> results = response.body().features();
 					if (results.size() > 0) {
 						// Set the latitude and longitude

@@ -4,10 +4,12 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
@@ -120,5 +122,67 @@ public class VenuesControllerTest {
 			.andExpect(view().name("redirect:/venues/0")).andExpect(handler().methodName("deleteVenue"));
 		
 		verify(venueService, never()).deleteById(0);
+	}
+	
+	@Test
+	public void addVenueValidation() throws Exception {
+		
+		String name = "default";
+		String street = "default";
+		String postcode = "default"; // Validation is performed by maps API
+		String capacity = "50";
+		
+		// Get to venue page
+		mvc.perform(get("/venues/add")
+			.accept(MediaType.TEXT_HTML))
+			.andExpect(status().isOk())
+			.andExpect(view().name("venues/add"));
+		
+		// Valid Venue
+		mvc.perform(post("/venues/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", name)
+			.param("street", street)
+			.param("postcode", postcode)
+			.param("capacity", capacity)
+			.with(csrf()))
+			.andExpect(status().isFound())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addVenue"))
+			.andExpect(view().name("redirect:/venues"));
+		
+		// Non-integer capacity Venue
+		mvc.perform(post("/venues/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", name)
+			.param("street", street)
+			.param("postcode", postcode)
+			.param("capacity", "a")
+			.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addVenue"))
+			.andExpect(view().name("venues/add"));
+		
+		//  Venue validation failing event
+		mvc.perform(post("/venues/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", "")
+			.param("street", street)
+			.param("postcode", postcode)
+			.param("capacity", capacity)
+			.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addVenue"))
+			.andExpect(view().name("venues/add"));
+		
+		// Venue validation is tested in venue tests
 	}
 }
