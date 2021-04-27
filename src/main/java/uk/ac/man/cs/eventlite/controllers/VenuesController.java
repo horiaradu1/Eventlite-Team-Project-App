@@ -64,7 +64,7 @@ public class VenuesController {
 	}
 	
 	@PostMapping(value = "/add")
-	public String addEvent(	@RequestParam("name") String name, 
+	public String addVenue(	@RequestParam("name") String name, 
 						   	@RequestParam("street") String street,
 						   	@RequestParam("postcode") String postcode,
 						   	@RequestParam("capacity") String capacity,
