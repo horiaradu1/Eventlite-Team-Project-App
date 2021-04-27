@@ -108,9 +108,11 @@
         	</tr>
       	</thead>
       	<tbody>
-      		<tr th:each="tweet : ${tweets}">
-      			<td th:text = "${{tweet.getCreatedAt()}}">Date created</td>
-      			<td th:text = "${tweet.getText()}" th:style="|${'color: #1DA1F2;'}|">Tweet</td>
+      		<tr th:each="tweet : ${tweets}" >
+      		
+      			<td th:text = "${tweet.getCreatedAt()}">Date created</td>
+      			<td><a th:text = "${tweet.getText()}" th:style="|${'color: #1DA1F2;'}|" th:href="@{https://twitter.com/{uid}/status/{id}(uid = ${tweet.getUser().getScreenName()}, id = ${tweet.getId()})}">Tweet</a></td>
+      		
       		</tr>
       	</tbody>
     </table>
