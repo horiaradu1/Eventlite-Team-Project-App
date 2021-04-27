@@ -54,22 +54,23 @@
       <thead>
         <tr>
           <th><i class="fas fa-bolt"></i> Event</th>
-          <th><i class="fas fa-map-marker-alt"></i> Venue</th>
           <th><i class="fas fa-calendar"></i> Date</th>
           <th><i class="fas fa-clock"></i> Time</th>
+          <th><i class="fas fa-map-marker-alt"></i> Venue</th>
         </tr>
       </thead>
       <tbody>
         <tr th:each="e : ${upcoming}">
-          <td th:text="${e.name}">My Event</td>
-          <td><a th:text="${e.venue.name}" th:href="@{/venues/{id}(id = ${e.venue.id})}"> Event venue </a></td>
+          <td><a th:text="${e.name}" th:href="@{/events/{id}(id = ${e.id})}"> Event name </a></td>
           <td th:utext="${{e.getDateString()}}">Event date</td>
           <td th:text="${{e.time}}">Event time</td>
+          <td><a th:text="${e.venue.name}" th:href="@{/venues/{id}(id = ${e.venue.id})}"> Event venue </a></td>
+          <!-- 
           <td>
           	<form th:action="@{/events/{num}(num=${e.id})}">
       		  <button type="submit"><i class="fas fa-eye" aria-hidden="true"></i> View</button>
     	  	</form>
-    	  </td>
+    	  </td>-->
         </tr>
       </tbody>
     </table>
@@ -79,22 +80,24 @@
       <thead>
         <tr>
           <th><i class="fas fa-bolt"></i> Event</th>
-          <th><i class="fas fa-map-marker-alt"></i> Venue</th>
           <th><i class="fas fa-calendar"></i> Date</th>
           <th><i class="fas fa-clock"></i> Time</th>
+          <th><i class="fas fa-map-marker-alt"></i> Venue</th>
         </tr>
       </thead>
       <tbody>
         <tr th:each="e : ${previous}">
-          <td th:text="${e.name}">My Event</td>
-          <td><a th:text="${e.venue.name}" th:href="@{/venues/{id}(id = ${e.venue.id})}"> Event venue </a></td>
+          <td><a th:text="${e.name}" th:href="@{/events/{id}(id = ${e.id})}"> Event name </a></td>
           <td th:utext="${{e.getDateString()}}">Event date</td>
           <td th:text="${{e.time}}">Event time</td>
+          <td><a th:text="${e.venue.name}" th:href="@{/venues/{id}(id = ${e.venue.id})}"> Event venue </a></td>
+          <!--
           <td>
           	<form th:action="@{/events/{num}(num=${e.id})}">
       		  <button type="submit"><i class="fas fa-eye" aria-hidden="true"></i> View</button>
     	  	</form>
     	  </td>
+    	   -->
         </tr>
       </tbody>
     </table>
