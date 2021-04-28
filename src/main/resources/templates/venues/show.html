@@ -26,15 +26,16 @@
       </thead>
       <tbody>
         <tr th:each="e : ${upcoming}">
-          <td th:text="${e.name}">My Event</td>
+          <td><a th:text="${e.name}" th:href="@{/events/{id}(id = ${e.id})}">My Event </a></td>
           <td th:text="${e.venue.name}">Event venue</td>
           <td th:utext="${{e.getDateString()}}">Event date</td>
           <td th:text="${{e.time}}">Event time</td>
+          <!--
           <td>
           	<form th:action="@{/events/{num}(num=${e.id})}">
       		  <button type="submit"><i class="fas fa-eye" aria-hidden="true"></i> View</button>
     	  	</form>
-    	  </td>
+    	  </td>-->
         </tr>
       </tbody>
     </table>
