@@ -1,7 +1,11 @@
 package uk.ac.man.cs.eventlite.controllers;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 
@@ -18,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import antlr.collections.List;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -42,12 +48,29 @@ public class EventsController {
 	private VenueService venueService;
 
 	@GetMapping
-	public String getAllEvents(Model model) {
+	public String getAllEvents(Model model, RedirectAttributes redirectAttrs) {
 
 		model.addAttribute("upcoming", eventService.findUpcoming());
 		model.addAttribute("previous", eventService.findPrevious());
 		model.addAttribute("events", eventService.findAll());
 		
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+	    cb.setDebugEnabled(true)
+	    .setOAuthConsumerKey("3GPfdMNYao6FSWlacVap2SOuU")
+	    .setOAuthConsumerSecret("76IfrYzbkqjuNc5tHsPYcNuyElMV7vwXJSh6zWytPEFp4UC31c")
+	    .setOAuthAccessToken("1381697881585950722-dYJk01rGhj8W296WaeInEM1lvrmcq2")
+	    .setOAuthAccessTokenSecret("3gtEKzDtVUPdtL1476zY8tn8rlUpZMVru2P3GxDYw3LEQ");
+	    TwitterFactory tf = new TwitterFactory(cb.build());
+	    Twitter twitter = tf.getInstance();
+	    
+	    try {
+	    	int len = Math.min(twitter.getUserTimeline().size(), 5);
+	    	model.addAttribute("tweets", twitter.getUserTimeline().subList(0, len));
+		} 
+	    catch (TwitterException e) {
+			redirectAttrs.addFlashAttribute("bad_message", "Could not retrive tweets");
+		}
+	    
 		return "events/index";
 	}
 	
@@ -61,6 +84,9 @@ public class EventsController {
 		model.addAttribute("upcoming", eventService.findByNameAfter(name));
 		model.addAttribute("previous", eventService.findByNameBefore(name));
 		return "events/index";
+		
+	    
+		
 	}
 	
 	@GetMapping("/{id}")

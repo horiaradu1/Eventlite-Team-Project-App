@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,9 +45,15 @@ import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.geojson.Point;
 
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 import org.springframework.util.LinkedMultiValueMap;
 
@@ -140,6 +147,44 @@ public class EventsControllerTest {
 		ven.addressGeocode();
 		assertTrue( ven.getLatitude() == 0 && ven.getLongitude() == 0);
 	}
+	//Could be improved
+	@Test
+	public void checkTweet() throws Exception {
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+	    cb.setDebugEnabled(true)
+	    .setOAuthConsumerKey("3GPfdMNYao6FSWlacVap2SOuU")
+	    .setOAuthConsumerSecret("76IfrYzbkqjuNc5tHsPYcNuyElMV7vwXJSh6zWytPEFp4UC31c")
+	    .setOAuthAccessToken("1381697881585950722-dYJk01rGhj8W296WaeInEM1lvrmcq2")
+	    .setOAuthAccessTokenSecret("3gtEKzDtVUPdtL1476zY8tn8rlUpZMVru2P3GxDYw3LEQ");
+	    TwitterFactory tf = new TwitterFactory(cb.build());
+	    Twitter twitter = tf.getInstance();
+	    
+	    int check = 0;
+	    //Test if tweet can be sent
+	    try {
+			twitter.updateStatus("test");
+			check = 1;
+			
+		} catch (TwitterException e) {
+			assertFalse(check == 1);
+		}
+	    assertTrue(check == 1);
+	    
+	    check = 0;
+	    //Test if tweet can be retrieved
+	    try {
+	    	Status tweet = twitter.getUserTimeline().get(0);
+	    	if (tweet.getText().equals("test")) 
+	    		check = 1;
+	    	twitter.destroyStatus(tweet.getId());
+	    }
+	    catch (TwitterException e) {
+			assertFalse(check == 1);
+		}
+		assertTrue(check == 1);
+		
+	}
+	
 
 	
 	@Test

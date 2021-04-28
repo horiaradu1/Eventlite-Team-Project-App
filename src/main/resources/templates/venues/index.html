@@ -35,14 +35,15 @@
 
       <tbody>
         <tr th:each="v : ${venues}">
-          <td th:text="${v.name}">My Venue</td>
+          <td><a th:text="${v.name}" th:href="@{/venues/{id}(id = ${v.id})}">My Venue </a></td>
           <td th:text="${v.street + ', ' + v.postcode}"> Venue address</td>
           <td th:text="${{v.capacity}}">Venue capacity</td>
+          <!--
           <td>
           	<form th:action="@{/venues/{num}(num=${v.id})}">
       		  <button type="submit"><i class="fas fa-eye" aria-hidden="true"></i> View</button>
     	  	</form>
-          </td>
+          </td>-->
         </tr>
       </tbody>
     </table>
