@@ -153,20 +153,6 @@ public class VenuesControllerTest {
 			.andExpect(handler().methodName("addVenue"))
 			.andExpect(view().name("redirect:/venues"));
 		
-		// Non-integer capacity Venue
-		mvc.perform(post("/venues/add")
-			.with(user("Rob").roles(Security.ADMIN_ROLE))
-			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-			.accept(MediaType.TEXT_HTML)
-			.param("name", name)
-			.param("street", street)
-			.param("postcode", postcode)
-			.param("capacity", "a")
-			.with(csrf()))
-			.andExpect(status().isOk())
-			.andExpect(model().hasNoErrors())
-			.andExpect(handler().methodName("addVenue"))
-			.andExpect(view().name("venues/add"));
 		
 		//  Venue validation failing event
 		mvc.perform(post("/venues/add")

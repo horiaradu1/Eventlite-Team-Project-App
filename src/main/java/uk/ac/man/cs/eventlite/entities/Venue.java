@@ -152,6 +152,9 @@ public class Venue {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		} else {
+			Point invalid = Point.fromLngLat(0, 0);
+			setCoordinates(invalid);
 		}
 		
 	}
