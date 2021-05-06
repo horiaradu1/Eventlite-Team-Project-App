@@ -118,10 +118,6 @@ public class EventsControllerTest {
 		double testLat = 44.40864436198193;
 		double testLong = 26.210873520635612;
 		
-		ven.addressGeocode();
-		
-
-		
 		assertTrue(Math.abs(testLong - ven.getLongitude()) < 0.001);
 		assertTrue(Math.abs(testLat - ven.getLatitude()) < 0.001);
 		
@@ -184,8 +180,6 @@ public class EventsControllerTest {
 		assertTrue(check == 1);
 		
 	}
-	
-
 	
 	@Test
 	public void getEventValid() throws Exception {
