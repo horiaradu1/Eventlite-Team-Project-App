@@ -104,7 +104,7 @@ public class VenueTest {
 	public void invalidAddressGeocode() throws Exception {
 		ven.setStreet("");
 		ven.setPostcode("");
-		assertThat(ven.getLatitude(), equalTo(90.0)); //North pole
+		assertThat(ven.getLatitude(), equalTo(0.0)); //North pole
 		assertThat(ven.getLongitude(), equalTo(0.0)); //North pole
 	}
 	
