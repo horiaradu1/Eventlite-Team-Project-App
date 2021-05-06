@@ -3,6 +3,7 @@ package uk.ac.man.cs.eventlite.controllers;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.StringContains.containsString;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
@@ -24,6 +25,7 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import uk.ac.man.cs.eventlite.EventLite;
 
@@ -63,7 +65,6 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
 		client.get().uri("/events/5").accept(MediaType.TEXT_HTML).exchange().expectStatus().isOk().expectHeader()
 				.contentTypeCompatibleWith(MediaType.TEXT_HTML).expectBody(String.class).consumeWith(result -> {
 					assertThat(result.getResponseBody(), containsString("Code Jam 2022"));
-					//System.out.println(result.getResponseBody());
 				});
 	}
 	
@@ -110,12 +111,209 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
 		assertThat(currentRows - 1, equalTo(countRowsInTable("events")));
 	}
 	
+	@Test
+	public void testPostAddEventNoUser() {
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("name", "test name"); 
+	   	form.add("date", "2100-10-10");
+	    form.add("time", "19:00");
+	   	form.add("venue", "1");
+	   	form.add("desc", "test description");
+
+	   	client.post().uri("/events/add").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+	   			.bodyValue(form).exchange().expectStatus().isFound().expectHeader()
+	   			.value("Location", endsWith("/sign-in"));
+
+	   	assertThat(currentRows, equalTo(countRowsInTable("events")));
+	}
+	
+	@Test
+	public void testPostAddEvent() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+		form.add("name", "test name"); 
+	   	form.add("date", "2100-10-10");
+	    form.add("time", "19:00");
+	   	form.add("venue", "1");
+	   	form.add("desc", "test description");
+
+ 		client.post().uri("/events/add").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isFound().expectHeader().value("Location", endsWith("/events"));
+
+ 		assertThat(currentRows + 1, equalTo(countRowsInTable("events")));
+	}
+	
+	@Test
+	public void testPostAddEventNoData() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+
+ 		client.post().uri("/events/add").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isBadRequest();
+
+ 		assertThat(currentRows, equalTo(countRowsInTable("events")));
+	}
+	
+	@Test
+	public void testPostAddEventBadData() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+		form.add("name", "test name"); 
+	   	form.add("date", "-1");
+	    form.add("time", "19:00");
+	   	form.add("venue", "-1");
+	   	form.add("desc", "test description");
+
+ 		client.post().uri("/events/add").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isOk();
+
+ 		assertThat(currentRows, equalTo(countRowsInTable("events")));
+	}
+	
+	@Test
+	public void testPostUpdateEventNoUser() {
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("id", "5");
+		form.add("name", "test name"); 
+	   	form.add("date", "2100-10-10");
+	    form.add("time", "19:00");
+	   	form.add("venueId", "1");
+	   	form.add("desc", "test description");
+
+	   	client.post().uri("/events/update").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+	   			.bodyValue(form).exchange().expectStatus().isFound().expectHeader()
+	   			.value("Location", endsWith("/sign-in"));
+	}
+	
+	/*
+	 
+	 TO DO
+	
+	@Test
+	public void testPostUpdateEvent() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+		form.add("id", "5");
+		form.add("name", "test name"); 
+	   	form.add("date", "2100-10-10");
+	    form.add("time", "19:00");
+	   	form.add("venueId", "1");
+	   	form.add("desc", "test description");
+
+ 		client.post().uri("/events/update").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isFound().expectHeader().value("Location", endsWith("/events"));
+	}
+	
+	
+	@Test
+	public void testPostUpdateEventNoData() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+
+ 		client.post().uri("/events/update").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isBadRequest();
+	}
+	*/
+	
+	@Test
+	public void testPostUpdateEventBadData() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+		form.add("id", "5");
+		form.add("name", "test name"); 
+	   	form.add("date", "-1");
+	    form.add("time", "19:00");
+	   	form.add("venueId", "-1");
+	   	form.add("desc", "test description");
+
+ 		client.post().uri("/events/update").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isBadRequest();
+	}
+	
+	@Test
+	public void testPostTweetNoUser() {
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("id", "5"); 
+	   	form.add("tweet", "niiice");
+
+	   	client.post().uri("/events/tweet").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+	   			.bodyValue(form).exchange().expectStatus().isFound().expectHeader()
+	   			.value("Location", endsWith("/sign-in"));
+	}
+	
+	@Test
+	public void testPostTweet() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+		form.add("id", "5"); 
+	   	form.add("tweet", "niiice");
+
+ 		client.post().uri("/events/tweet").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isFound().expectHeader().value("Location", endsWith("/events/5"));
+	}
+	
+	@Test
+	public void testPostTweetNoData() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+
+ 		client.post().uri("/events/tweet").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isBadRequest();
+	}
+	
+	@Test
+	public void testPostTweetBadData() {
+		String[] tokens = login();
+
+		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+		form.add("_csrf", tokens[0]);
+		form.add("id", "-1"); 
+	   	form.add("tweet", "niiice");
+
+ 		client.post().uri("/events/tweet").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+ 				.bodyValue(form).cookies(cookies -> {
+ 					cookies.add(SESSION_KEY, tokens[1]);
+ 				}).exchange().expectStatus().isFound();
+	}
+	
 	private String[] login() {
 		String[] tokens = new String[2];
 
-		// Although this doesn't POST the log in form it effectively logs us in.
-		// If we provide the correct credentials here, we get a session ID back which
-		// keeps us logged in.
 		EntityExchangeResult<String> result = client.mutate().filter(basicAuthentication("Rob", "Haines")).build().get()
 				.uri("/").accept(MediaType.TEXT_HTML).exchange().expectBody(String.class).returnResult();
 		tokens[0] = getCsrfToken(result.getResponseBody());
@@ -127,7 +325,6 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
 	private String getCsrfToken(String body) {
 		Matcher matcher = CSRF.matcher(body);
 
-		// matcher.matches() must be called; might as well assert something as well...
 		assertThat(matcher.matches(), equalTo(true));
 
 		return matcher.group(1);
