@@ -16,15 +16,7 @@
 	      <div th:if="${description}" th:text="${description}">Event description</div>
       </div>
 
-	  <br>
-	  <div sec:authorize="isAuthenticated()">
-	      <form th:action="@{/events/{num}(num=${id})}" th:method="delete">
-		  	<button type="submit"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
-		  </form>
-      </div>
-      
-    
-    
+
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 	<link href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css" rel="stylesheet">
 	<script src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"></script>
@@ -138,8 +130,11 @@
 		   <button class="btn btn-primary" type="submit">Update Event</button>
 		</form>
 		<br>
+		<form th:action="@{/events/{num}(num=${id})}" th:method="delete">
+			<button class="btn btn-primary" type="submit"><i class="fas fa-trash" aria-hidden="true"></i>Delete</button>
+		</form>
+		<br>
 	</div>
   </div>
- 
 </body>
 </html>
