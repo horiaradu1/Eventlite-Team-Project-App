@@ -29,11 +29,11 @@ public class EventsControllerApi {
 		return eventCollection(eventService.findAll());
 	}
 
-	private EntityModel<Event> singleEvent(Event event) {
-		Link selfLink = linkTo(EventsControllerApi.class).slash(event.getId()).withSelfRel();
-
-		return EntityModel.of(event, selfLink);
-	}
+//	private EntityModel<Event> singleEvent(Event event) {
+//		Link selfLink = linkTo(EventsControllerApi.class).slash(event.getId()).withSelfRel();
+//
+//		return EntityModel.of(event, selfLink);
+//	}
 
 	private CollectionModel<Event> eventCollection(Iterable<Event> events) {
 		Link selfLink = linkTo(methodOn(EventsControllerApi.class).getAllEvents()).withSelfRel();
