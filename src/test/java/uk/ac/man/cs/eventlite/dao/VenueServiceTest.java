@@ -65,9 +65,9 @@ public class VenueServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 		venueService.save(venA);
 		
 		int count = 0;
-		for (Venue ven : venueService.findByName("a")) 
+		for (Venue ven : venueService.findByName("ven")) 
 			count++;
-		assertTrue(count == 1);
+		assertTrue(count == 3);
 		
 		count = 0;
 		for (Venue ven : venueService.findByName("venue")) 

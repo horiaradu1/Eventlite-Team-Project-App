@@ -72,20 +72,23 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		LocalDate date2 = LocalDate.of(2018, 5, 10);
 		LocalDate date3 = LocalDate.of(2019, 4, 26);
 		LocalDate date4 = LocalDate.of(2022, 2, 14);
+		LocalDate date5 = LocalDate.of(2026, 6, 20);
 		LocalTime time1 = LocalTime.of(9, 0);
 		LocalTime time2 = LocalTime.of(11, 0);
 		LocalTime time3 = LocalTime.of(16, 30);
 
 		addVenue(1, "Kilburn, G23", "Oxford Rd", "M13 9PL", 80);
 		addVenue(2, "Online", "Deramore St", "M14 4DU", 100000);
+		addVenue(3, "Chemistry Building", "Brunswick St", "M13 9GB", 200);
+		addVenue(4, "Old Trafford", "Sir Matt Busby Way", "M16 0RA", 30000);
 
-		addEvent(47, 1, date3, time3, "ONI 2019", "Olympiad in Informatics (Suceava)");
+		addEvent(47, 3, date3, time3, "ONI 2019", "Olympiad in Informatics (Suceava)");
 		addEvent(48, 1, date1, time2, "ONI 2017", "Olympiad in Informatics (Brasov)");
 		addEvent(49, 2, date4, time3, "Code Jam 2022", "Contest organized by Google");
 		addEvent(50, 1, date2, time2, "ONM 2018", "Mathematical Olympiad (Timisoara)");
 		addEvent(51, 1, date2, time1, "ONG 2018", "National Geography Olympiad");
 		addEvent(52, 2, date4, time2, "World Cup 2022", "Football Competition (Dubai)");
-		addEvent(53, 1, date4, time1, "ONM 2022", "Mathematical Olympiad (Medgidia)");
-		addEvent(54, 2, date3, "World Cup 2026");
+		addEvent(53, 3, date4, time1, "ONM 2022", "Mathematical Olympiad (Medgidia)");
+		addEvent(54, 4, date5, "World Cup 2026");
 	}
 }
