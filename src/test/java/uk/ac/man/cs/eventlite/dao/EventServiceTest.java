@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 
 import uk.ac.man.cs.eventlite.EventLite;
 import uk.ac.man.cs.eventlite.entities.Event;
+import uk.ac.man.cs.eventlite.entities.Venue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = EventLite.class)
@@ -47,6 +48,14 @@ public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 	
 	// This class is here as a starter for testing any custom methods within the
 	// EventService. Note: It is currently @Disabled!
+	@Test
+	public void countTest() {
+		int cnt = (int)eventService.count();
+		for (Event ev : eventService.findAll())
+			cnt--;
+		assertSame(cnt, 0);
+	}
+	
 	@Test
 	public void findOneTestFound() {
 		Event ev = new Event();
@@ -80,6 +89,26 @@ public class EventServiceTest extends AbstractTransactionalJUnit4SpringContextTe
 	public void deleteAllTest() {
 		eventService.deleteAll();
 		assertSame(0, (int)eventService.count());
+	}
+
+	@Test
+	public void findAllTest() {
+		eventService.deleteAll();
+		
+		Event eventA = new Event(); eventA.setName("Event A"); eventA.setVenueId(1); eventA.setDate(LocalDate.of(2020, 1, 1));
+		Event eventB = new Event();	eventB.setName("Event B"); eventB.setVenueId(1); eventB.setDate(LocalDate.of(2020, 1, 1));
+		Event eventC = new Event(); eventC.setName("Event C"); eventC.setVenueId(1); eventC.setDate(LocalDate.of(2020, 1, 1));
+		
+		// Insert in an arbitrary order
+		eventService.save(eventB);
+		eventService.save(eventC);
+		eventService.save(eventA);
+		
+		String previous = "";
+		for (Event ev : eventService.findAll()) {
+			assertTrue(previous.compareTo(ev.getName()) < 0);
+			previous = ev.getName();
+		}	
 	}
 
 	@Test
