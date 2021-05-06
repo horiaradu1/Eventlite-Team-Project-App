@@ -60,6 +60,7 @@ public class VenuesControllerIntegrationTest extends AbstractTransactionalJUnit4
 									assertThat(result.getResponseBody(), containsString("100000"));
 									assertThat(result.getResponseBody(), containsString("M14 4DU"));
 									assertThat(result.getResponseBody(), containsString("Deramore St"));
+									assertThat(result.getResponseBody(), not(containsString("Kilburn, G23")));
 									});
 	}
 
@@ -69,6 +70,16 @@ public class VenuesControllerIntegrationTest extends AbstractTransactionalJUnit4
 									.expectBody(String.class).consumeWith(result -> {
 									assertThat(result.getResponseBody(), not(containsString("Online")));
 									assertThat(result.getResponseBody(), not(containsString("Kilburn, G23")));
+									});
+	}
+
+	@Test
+	public void testGetEventsByNameNoName() {
+		//Should return all events
+		client.get().uri("/venues/search?searchName=").accept(MediaType.TEXT_HTML).exchange().expectStatus().isOk()
+									.expectBody(String.class).consumeWith(result -> {
+									assertThat(result.getResponseBody(), containsString("Deramore St"));
+									assertThat(result.getResponseBody(), containsString("Online"));
 									});
 	}
 
@@ -84,6 +95,12 @@ public class VenuesControllerIntegrationTest extends AbstractTransactionalJUnit4
 	}
 
 	@Test
+	public void testGetEventByIdInvalid() {
+		// Check for redirection
+		client.get().uri("/venues/-1").accept(MediaType.TEXT_HTML).exchange().expectStatus().isFound();
+	}
+
+	@Test
 	@WithMockUser(roles = "ADMIN")
 	public void testGetAddWithAdmin() {
 		client.mutate().filter(basicAuthentication("Rob", "Haines")).build().get().uri("/venues/add").accept(MediaType.TEXT_HTML).exchange().expectStatus().isOk()
@@ -94,7 +111,7 @@ public class VenuesControllerIntegrationTest extends AbstractTransactionalJUnit4
 	}
 
 	@Test
-	public void testGetAddNoUser() {
+	public void testGetAddNoAdmin() {
 		client.get().uri("/venues/add").accept(MediaType.TEXT_HTML).exchange().expectStatus().isOk()
 									.expectBody(String.class).consumeWith(result -> {
 									assertThat(result.getResponseBody(), not(containsString("Enter venue name here")));
