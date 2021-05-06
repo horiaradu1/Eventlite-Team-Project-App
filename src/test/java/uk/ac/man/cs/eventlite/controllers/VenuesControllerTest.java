@@ -102,6 +102,24 @@ public class VenuesControllerTest {
 	}
 	
 	@Test
+	public void updateVenueWithoutName() throws Exception {
+		MultiValueMap<String, String> values = new LinkedMultiValueMap<String, String>();
+		values.add("id", "1");
+		values.add("name", "");
+		values.add("street", "Oxford Road");
+		values.add("postcode", "20");
+		values.add("capacity", "5");
+		
+		mvc.perform(post("/venues/update").with(user("Rob").roles(Security.ADMIN_ROLE))
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED).params(values)
+				.accept(MediaType.TEXT_HTML).with(csrf())).andExpect(status().isFound())
+				.andExpect(view().name("redirect:/venues/1")).andExpect(model().hasNoErrors())
+				.andExpect(handler().methodName("updateVenue")).andExpect(flash().attributeExists("bad_message"));
+
+		verify(venueService, never()).save(venue);
+	}
+	
+	@Test
 	public void deleteVenue() throws Exception {
 		mvc.perform(delete("/venues/0").with(csrf()).with(user("Rob").roles(Security.ADMIN_ROLE))
 			.accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
@@ -154,7 +172,7 @@ public class VenuesControllerTest {
 			.andExpect(view().name("redirect:/venues"));
 		
 		
-		//  Venue validation failing event
+		//  Venue validation with no name data
 		mvc.perform(post("/venues/add")
 			.with(user("Rob").roles(Security.ADMIN_ROLE))
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -168,7 +186,25 @@ public class VenuesControllerTest {
 			.andExpect(model().hasNoErrors())
 			.andExpect(handler().methodName("addVenue"))
 			.andExpect(view().name("venues/add"));
-		
+		verify(venueService, never()).save(venue);
+		//  Venue validation with bad data
+		mvc.perform(post("/venues/add")
+			.with(user("Rob").roles(Security.ADMIN_ROLE))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.accept(MediaType.TEXT_HTML)
+			.param("name", "AaaaaaaaaaaaaaaaaaaaaaaaAaaaaaaaaaaaaaaaaaaaaaaaaAaaaaaaaa\"\n" + 
+					"aaaaaaaaaaaaaaaaAaaaaaaaaaaaaaaaaaaaaaaaaAaAaaaaaaaaaaaaaaaaaaaaaaa\"\n" + 
+					"AaaaaaaaaaaaaaaaaaaaaaaaaAaaaaaaaaaaaaaaaaaaaaaaaaAaaaaaaaaaaaaaaaa\"\n" + 
+					"aaaaaaaaAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+			.param("street", street)
+			.param("postcode", postcode)
+			.param("capacity", capacity)
+			.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(model().hasNoErrors())
+			.andExpect(handler().methodName("addVenue"))
+			.andExpect(view().name("venues/add"));
+		verify(venueService, never()).save(venue);
 		// Venue validation is tested in venue tests
 	}
 }
