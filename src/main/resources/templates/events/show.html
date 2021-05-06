@@ -7,15 +7,22 @@
 <body>
   <div layout:fragment="content">
     <h1 th:text="${name}">Event!</h1>
+    <br>
 
-      <div th:utext="${date}">Event date</div>
-      <div th:if="${time}" th:text="${time}">Event time</div>
-      <div th:text="${venue}">Venue</div>
-      <div th:if="${description}" th:text="${description}">Event description</div>
+	  <div style="width:500px;height:100px;border:1px solid #000;">
+	      <div th:utext="${date}">Event date</div>
+	      <div th:if="${time}" th:text="${time}">Event time</div>
+	      <div th:text="${venue}">Venue</div>
+	      <div th:if="${description}" th:text="${description}">Event description</div>
+      </div>
 
-      <form th:action="@{/events/{num}(num=${id})}" th:method="delete">
-	  	<button type="submit"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
-	  </form>
+	  <br>
+	  <div sec:authorize="isAuthenticated()">
+	      <form th:action="@{/events/{num}(num=${id})}" th:method="delete">
+		  	<button type="submit"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
+		  </form>
+      </div>
+      
     
     
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
