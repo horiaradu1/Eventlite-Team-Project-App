@@ -21,8 +21,6 @@
 	    </form>
     </div>
 	
-	<a class="btn btn-primary" role="button"  href="/"><i  aria-hidden="true"></i> Go back </a><br><br>
-	
     <table class="table table-striped table-hover">
       <thead>
         <tr>
@@ -47,6 +45,9 @@
         </tr>
       </tbody>
     </table>
+    
+    <a class="btn btn-primary" role="button"  href="/"><i  aria-hidden="true"></i> Go back </a><br><br>
+    <br>
 
   	<div sec:authorize="isAuthenticated()">
     	<a class="btn btn-primary" role="button" href="/venues/add"><i class="fas fa-plus" aria-hidden="true"></i> Add venue </a>
