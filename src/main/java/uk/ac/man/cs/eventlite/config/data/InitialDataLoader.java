@@ -82,13 +82,15 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		addVenue(3, "Chemistry Building", "Brunswick St", "M13 9GB", 200);
 		addVenue(4, "Old Trafford", "Sir Matt Busby Way", "M16 0RA", 30000);
 
-		addEvent(47, 3, date3, time3, "ONI 2019", "Olympiad in Informatics (Suceava)");
-		addEvent(48, 1, date1, time2, "ONI 2017", "Olympiad in Informatics (Brasov)");
+		addEvent(47, 3, date3, time3, "ONI 2019", "Olympiad in Informatics Suceava edition");
+		addEvent(48, 1, date1, time2, "ONI 2017", "Olympiad in Informatics Brasov edition");
 		addEvent(49, 2, date4, time3, "Code Jam 2022", "Contest organized by Google");
-		addEvent(50, 1, date2, time2, "ONM 2018", "Mathematical Olympiad (Timisoara)");
+		addEvent(50, 1, date2, time2, "ONM 2018", "Mathematical Olympiad Timisoara edition");
 		addEvent(51, 1, date2, time1, "ONG 2018", "National Geography Olympiad");
-		addEvent(52, 2, date4, time2, "World Cup 2022", "Football Competition (Dubai)");
-		addEvent(53, 3, date4, time1, "ONM 2022", "Mathematical Olympiad (Medgidia)");
+		addEvent(52, 2, date4, time2, "World Cup 2022", "Football Competition Dubai edition");
+		addEvent(53, 3, date4, time1, "ONM 2022", "Mathematical Olympiad Medgidia edition");
 		addEvent(54, 4, date5, "World Cup 2026");
+		addEvent(55, 2, date4, time1, "World Cyber Games 2022", "International Competition for Gaming");
+		addEvent(56, 2, date5, time3, "Global Round 42", "Round organized by codeforces");
 	}
 }
