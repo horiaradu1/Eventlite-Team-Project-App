@@ -42,15 +42,15 @@
 		  font-family: 'Open Sans', sans-serif;
 		}
 	</style>
-	
- 	<form th:action="@{/events/tweet}" method="POST">
-    	<input class="form-control" type="hidden" name="id" id="id" th:value="${id}"/><br>
-  	<br>
-        <b><label for="tweet">Share the event!</label></b>
-        <input class="form-control" type="text" name="tweet" id="tweet" th:placeholder="${name}" required>
-  		<button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane" aria-hidden="true"></i>Send Tweet</button>
-	</form>
-    
+	<div sec:authorize="isAuthenticated()">
+	 	<form th:action="@{/events/tweet}" method="POST">
+	    	<input class="form-control" type="hidden" name="id" id="id" th:value="${id}"/><br>
+	  	<br>
+	        <b><label for="tweet">Share the event!</label></b>
+	        <input class="form-control" type="text" name="tweet" id="tweet" th:placeholder="${name}" required>
+	  		<button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane" aria-hidden="true"></i>Send Tweet</button>
+		</form>
+    </div>
     <br>
     <div id="map"></div>
 	<br>
