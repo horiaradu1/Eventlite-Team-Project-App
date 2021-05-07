@@ -203,6 +203,16 @@ public class EventsController {
 	@PostMapping("/tweet")
 	public String tweetEvent(@RequestParam String id, @RequestParam String tweet, RedirectAttributes redirectAttrs) {
 		
+		long longId = -1;
+		try {
+			longId = Long.valueOf(id);
+		} catch (Exception e) {}
+		
+		if(!eventService.existsById(longId)) {
+			redirectAttrs.addFlashAttribute("bad_message", "Id non existent");
+			return "redirect:/events";
+		}
+		
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 	    cb.setDebugEnabled(true)
 	    .setOAuthConsumerKey("3GPfdMNYao6FSWlacVap2SOuU")
