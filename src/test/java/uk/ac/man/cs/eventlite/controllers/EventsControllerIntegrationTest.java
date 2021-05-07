@@ -192,16 +192,13 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
 	   	form.add("date", "2100-10-10");
 	    form.add("time", "19:00");
 	   	form.add("venueId", "1");
-	   	form.add("desc", "test description");
+	   	form.add("description", "test description");
 
 	   	client.post().uri("/events/update").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 	   			.bodyValue(form).exchange().expectStatus().isFound().expectHeader()
 	   			.value("Location", endsWith("/sign-in"));
 	}
 	
-	/*
-	 
-	 TO DO
 	
 	@Test
 	public void testPostUpdateEvent() {
@@ -214,12 +211,12 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
 	   	form.add("date", "2100-10-10");
 	    form.add("time", "19:00");
 	   	form.add("venueId", "1");
-	   	form.add("desc", "test description");
+	   	form.add("description", "test description");
 
  		client.post().uri("/events/update").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
  				.bodyValue(form).cookies(cookies -> {
  					cookies.add(SESSION_KEY, tokens[1]);
- 				}).exchange().expectStatus().isFound().expectHeader().value("Location", endsWith("/events"));
+ 				}).exchange().expectStatus().isFound().expectHeader().value("Location", endsWith("/events/5"));
 	}
 	
 	
@@ -233,9 +230,8 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
  		client.post().uri("/events/update").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
  				.bodyValue(form).cookies(cookies -> {
  					cookies.add(SESSION_KEY, tokens[1]);
- 				}).exchange().expectStatus().isBadRequest();
+ 				}).exchange().expectStatus().is5xxServerError();
 	}
-	*/
 	
 	@Test
 	public void testPostUpdateEventBadData() {
@@ -248,7 +244,7 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
 	   	form.add("date", "-1");
 	    form.add("time", "19:00");
 	   	form.add("venueId", "-1");
-	   	form.add("desc", "test description");
+	   	form.add("description", "test description");
 
  		client.post().uri("/events/update").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
  				.bodyValue(form).cookies(cookies -> {
@@ -308,7 +304,7 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
  		client.post().uri("/events/tweet").accept(MediaType.TEXT_HTML).contentType(MediaType.APPLICATION_FORM_URLENCODED)
  				.bodyValue(form).cookies(cookies -> {
  					cookies.add(SESSION_KEY, tokens[1]);
- 				}).exchange().expectStatus().isFound();
+ 				}).exchange().expectStatus().isFound().expectHeader().value("Location", endsWith("/events"));
 	}
 	
 	private String[] login() {
