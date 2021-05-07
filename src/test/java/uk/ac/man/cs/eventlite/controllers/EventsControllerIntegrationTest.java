@@ -64,7 +64,7 @@ public class EventsControllerIntegrationTest extends AbstractTransactionalJUnit4
 	public void testGetEvent() {
 		client.get().uri("/events/5").accept(MediaType.TEXT_HTML).exchange().expectStatus().isOk().expectHeader()
 				.contentTypeCompatibleWith(MediaType.TEXT_HTML).expectBody(String.class).consumeWith(result -> {
-					assertThat(result.getResponseBody(), containsString("Code Jam 2022"));
+					assertThat(result.getResponseBody(), containsString("ONI 2019"));
 				});
 	}
 	
